@@ -1,0 +1,13 @@
+contributors.txt
+
+Author: Tantek Çelik, http://tantek.com, 2011-004
+
+To retain the ability to change or add additional open source licenses for the CASSIS project, I am requesting that all contributors release all diff submissions to the public domain. If you have changes to contribute, for your first pull request please sign the following by adding your name, http URL, and date (ISO8601) to the list of signed contributors at the end of this file.
+
+Agreement:
+
+I agree to release all contributions into the public domain and agree to the Creative Commons Public Domain License, the original at http://creativecommons.org/licenses/publicdomain/ or any later version published by Creative Commons (e.g. CC0); with either a waiver of rights, or an assertion that no rights attach to a particular work. I agree to updates of this file (contributors.txt) that are consistent with the spirit of keeping all contributions in the public domain.
+
+Signed: (name, http URL, date (ISO8601)
+
+* ...
