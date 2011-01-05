@@ -23,4 +23,5 @@ spirit of keeping all contributions in the public domain.
 Signed: name, http URL, date (ISO8601, ordinal preferred)
 
 * Joel Franusic, http://joel.franusic.com, 2011-004
+* Edward O'Connor, http://edward.oconnor.cx, 2011-004
 * ...
