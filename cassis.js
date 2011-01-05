@@ -756,6 +756,7 @@ function offset($n,$h) {
  if ($n===false) { return 0; }
  else            { return $n+1; }
 }
+
 function contains($h,$n) {
  // actual HT syntax: haystack contains needle, e.g. if ("abc" contains "b")
  return !(strpos($h,$n)===false);
