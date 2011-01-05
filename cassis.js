@@ -62,7 +62,7 @@ function getFullYear($d = "") {
 // arrays
 
 function array() { // makes an array from as many items as you want to give it.
-  return arguments;
+  return Array.prototype.slice.call(arguments);
 }
 
 
