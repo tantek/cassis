@@ -20,7 +20,7 @@ no rights attach to a particular work. I agree to updates of
 this file (contributors.txt) that are consistent with the 
 spirit of keeping all contributions in the public domain.
 
-Signed: name, http URL, date (ISO8601)
+Signed: name, http URL, date (ISO8601, ordinal preferred)
 
 * Joel Franusic, http://joel.franusic.com, 2010-01-04
 * ...
