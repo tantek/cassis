@@ -52,16 +52,6 @@ function getFullYear($d = "") {
   return date_get_full_year($d);
 }
 
-//function getTimestamp($d) {  
-//  // 2010-020 obsoleted. Use date_get_timestamp instead
-//  return date_get_timestamp($d);
-//}
-
-//function getOrdinalDays($d) {
-//  // 2010-020 obsoleted. Use date_get_ordinal_days instead
-//  return date_get_ordinal_days($d);
-//}
-
 // end cassis0js.php
 // --------------------------------------------------------------------
 /*/ // this comment inverter switches from PHP only to javascript only
