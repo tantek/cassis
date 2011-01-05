@@ -1,4 +1,4 @@
-<!-- cassis.js Copyright 2008-2010 Tantek Çelik http://tantek.com   -->
+<!-- cassis.js Copyright 2008-2011 Tantek Çelik http://tantek.com   -->
 <!-- http://cassisproject.com conceived 2008-254, created 2009-299  -->
 <!-- http://creativecommons.org/licenses/by-sa/3.0/                 -->
 /* if you see this in the browser, you need to wrap your include of cassis.js with calls to ob_start and ob_end_clean, e.g. use the following in your PHP: ob_start(); include 'cassis.js'; ob_end_clean(); <?php 
