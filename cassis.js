@@ -224,8 +224,9 @@ function trim() {
  while (j>i && contains(c,s[j])) {
    --j;
  }
+ j++;
  if (j>i) {
-   return substr(s,i,j-i+1);
+   return substr(s,i,j-i);
  }
  else {
    return '';
@@ -849,7 +850,18 @@ function ellipsize_to_word($s, $max, $e, $min) {
     return $s; // no need to ellipsize
   }
 
-  $slen = $max-strlen($e);
+  $elen = strlen($e);
+  $slen = $max-$elen;
+
+  // if last characters before $max are ': ', truncate w/o ellipsis.
+  // no need to take length of ellipsis into account
+  if ($e=='...') {
+    for ($ii=2;$ii<=$elen+1;$ii++) {
+      if (substr($s,$max-$ii,2)==': ') {
+        return substr($s,0,$max-$ii+1);
+      }
+    }
+  }
 
   if ($min) {
     // if a non-zero minimum is provided, then
@@ -881,7 +893,6 @@ function ellipsize_to_word($s, $max, $e, $min) {
     $slen -= 4;
   }
   
-  
   //if char immediately before ellipsis would be @$ then trim it as well
   if ($slen > 0 && contains('@$',$s[$slen-1])) {
     --$slen;
@@ -894,6 +905,11 @@ function ellipsize_to_word($s, $max, $e, $min) {
 
   if ($slen < 1) { // somehow shortened too much
     return $e; // or ellipsis by itself filled/exceeded max, return ellipsis.
+  }
+
+  // if last two chars are ': ', omit ellipsis. 
+  if ($e=='...' && substr($s,$slen-2,2)==': ') {
+    return substr($s,0,$slen);
   }
 
   return strcat(substr($s,0,$slen),$e);
