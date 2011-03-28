@@ -418,7 +418,7 @@ function sxg_to_num($s) {
    else if ($c==95 || $c==45) { $c=34; } // _ underscore and correct dash - to _
    else if ($c>=97 && $c<=107) { $c-=62; }
    else if ($c>=109 && $c<=122) { $c-=63; }
-   else { $c = 0; } // treat all other noise as 0
+   else break; // treat all other noise as end of number
    $n = 60*$n + $c;
  }
  return $n*$m;
@@ -958,14 +958,15 @@ function auto_link(/*$t*/) {
         (!contains('@charset@font@font-face@import@media@namespace@page@',
                    strcat($matchi,'@'))))
     {
-      $afterlink = substr($matchi,-1,1);
-      if (contains('.!?,;"\')]}',$afterlink) && // trim punctuation from end
-          ($afterlink!=')' || !contains($matchi,'('))) { // allow one paren pair
-        $matchi = substr($matchi,0,-1);
+      $afterlink = '';
+      $afterchar = substr($matchi,-1,1);
+      while (contains('.!?,;"\')]}',$afterchar) && // trim punctuation from end
+          ($afterchar!=')' || !contains($matchi,'('))) { // allow one paren pair
+          $afterlink = strcat($afterchar,$afterlink);
+          $matchi = substr($matchi,0,-1);
+          $afterchar = substr($matchi,-1,1);
       }
-      else {
-        $afterlink = "";
-      }
+      
       $fe = 0;
       if ($do_embed) {
          $fe = (substr($matchi,-4,1)=='.') ? 
