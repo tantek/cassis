@@ -348,6 +348,8 @@ function string($n) {
 }
 
 function str_pad_left($s1, $n, $s2) {
+  $s1 = string($s1);
+  $s2 = string($s2);
   if (js()) {
     $n -= strlen($s1);
     while ($n >= strlen($s2)) { 
@@ -381,6 +383,30 @@ function preg_split(p, s) {
 }
 /// --> <?php ///
 
+function preg_match_1($p, $s) { /// ?> <!--   ///
+  var $m;                       /// --> <?php ///
+  if (js()) {
+    return $s.match(new RegExp(trim_slashes($p), "i"));
+  } else {
+    $m = array();
+    if (preg_match($p, $s, $m) !== FALSE) {
+      return $m[0];
+    } else {
+      return null; //array();
+    }
+  }
+}
+
+function preg_replace_1($p, $r, $s) {
+  if (js()) {
+    return $s.replace(new RegExp(trim_slashes($p), "i"), $r);
+  }
+  else {
+    $r = preg_replace($p, $r, $s, 1);
+    if ($r !== null) { return $r; }
+    else             { return $s; }
+  }
+}
 
 function preg_matches($p, $s) { /// ?> <!--   ///
   var $m;                       /// --> <?php ///
@@ -391,7 +417,7 @@ function preg_matches($p, $s) { /// ?> <!--   ///
     if (preg_match_all($p, $s, $m, PREG_PATTERN_ORDER) !== FALSE) {
       return $m[0];
     } else {
-      return array();
+      return null; //array();
     }
   }
 }
@@ -451,7 +477,7 @@ function sxg_to_num($s) { /// ?> <!--   ///
 
 function sxg_to_numf($s, $f) {
   if ($f===undefined) { $f=1; }
-  return str_pad_left(string(sxg_to_num($s)), $f, "0");
+  return str_pad_left(sxg_to_num($s), $f, "0");
 }
 
 // -------------------------------------------------------------------
@@ -530,7 +556,7 @@ function ymdp_to_d($y, $m, $d) { /// ?> <!--   ///
 
 function ymdp_to_yd($y, $m, $d) {
   return strcat(str_pad_left($y, 4, "0"), '-',
-                str_pad_left(string(ymdp_to_d($y, $m, $d)), 3, "0"));
+                str_pad_left(ymdp_to_d($y, $m, $d), 3, "0"));
 }
 
 function ymd_to_yd($d) {
@@ -623,9 +649,8 @@ function days_to_yd($d) { /// ?> <!--   ///
   $a = date_create_ymd(strcat($y, "-01-01"));
   return strcat($y, "-",
            str_pad_left(
-             string(1 + 
-               floor((
-                 date_get_timestamp($d) - date_get_timestamp($a))/86400)), 3, "0"));
+             1 + floor((
+                   date_get_timestamp($d) - date_get_timestamp($a))/86400), 3, "0"));
 }
 
 function sd_to_yd($d) {
@@ -649,6 +674,12 @@ function ydtosdf($d,$f) { return yd_to_sdf($d, $f); }
 function daystoyd($d) { return days_to_yd($d); }
 function sdtoyd($d) { return sd_to_yd($d); }
 
+// -------------------------------------------------------------------
+// HTTP
+
+function is_http_header($s) {
+  return (preg_match_1('/^[a-zA-Z][-\\w]*:/',$s)!==null);
+}
 
 // -------------------------------------------------------------------
 // webaddress
@@ -759,7 +790,7 @@ function num_to_isbn10($n) { /// ?> <!--   ///
   if ($d===10) {$d="X";}
   else if ($d===11) {$d="0";}
   else {$d=string($d);}
-  return strcat(str_pad_left(string($n), 9, "0"), $d);
+  return strcat(str_pad_left($n, 9, "0"), $d);
 }
 
 // -------------------------------------------------------------------
@@ -783,9 +814,23 @@ function offset($n, $h) {
   }
 }
 
-function contains($h,$n) {
+function contains($h, $n) {
 // HyperTalk syntax haystack contains needle: if ("abc" contains "b")
-  return strpos($h,$n)!==false;
+  return strpos($h, $n)!==false;
+}
+
+function line_1_of($s) { /// ?> <!--   ///
+  var $r;                /// --> <?php ///
+  $r = preg_match_1('/^[\\w\\W]*?[\\n\\r]+?/', $s);
+  if ($r === null) { return $s; }
+  return substr($r, 0, strlen($r)-1);
+}
+
+function delete_line_1_of($s) {
+ if (preg_match_1('/^[\\w\\W]*?[\\n\\r]+?/', $s) === null) {
+   return '';
+ }
+ return preg_replace_1('/^[\\w\\W]*?[\\n\\r]+?/', '', $s); 
 }
 
 // -------------------------------------------------------------------
