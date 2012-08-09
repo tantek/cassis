@@ -12,9 +12,9 @@ please sign the following by adding your name, http URL, and date
 Agreement:
 
 I agree to release all contributions into the public domain and 
-agree to the Creative Commons Public Domain License, the original 
-at http://creativecommons.org/licenses/publicdomain/ or 
-any later version published by Creative Commons (e.g. CC0); 
+agree to the Creative Commons CC0 Public Domain Declaration 
+at http://creativecommons.org/publicdomain/zero/1.0/ or 
+any later version published by Creative Commons; 
 with either a waiver of rights, or an assertion that 
 no rights attach to a particular work. I agree to updates of 
 this file (contributors.txt) that are consistent with the 
