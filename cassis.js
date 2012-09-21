@@ -156,6 +156,10 @@ function substr(s, o, n) {
   return s.substring(o, o+n);
 }
 
+function substr_count(s, n) {
+ return s.split(n).length - 1;
+}
+
 function strpos(h, n, o) {
   // clients must triple-equal test return for === false for no match!
   // or use offset(n, h) instead (0 = not found, else 1-based index)
@@ -713,7 +717,7 @@ function web_address_to_uri($wa, $addhttp) {
 }
 
 function uri_clean($uri) {
-  $uri = web_address_to_uri($uri);
+  $uri = web_address_to_uri($uri, false);
   // prune the optional http:// for a neater param
   if (substr($uri, 0, 7) === "http://") {
     $uri = explode("://", $uri, 2);
@@ -931,10 +935,10 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
   $elen = strlen($e);
   $slen = $max-$elen;
 
-  // if last characters before $max are ': ', truncate w/o ellipsis.
+  // if last characters before $max+1 are ': ', truncate w/o ellipsis.
   // no need to take length of ellipsis into account
   if ($e==='...') {
-    for ($i=2; $i<=$elen+1; $i+=1) {
+    for ($i=1; $i<=$elen+1; $i+=1) {
       if (substr($s, $max-$i, 2)===': ') {
         return substr($s, 0, $max-$i+1);
       }
@@ -995,6 +999,17 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
   return strcat(substr($s, 0, $slen), $e);
 }
 
+function auto_link_re() {
+  return '/(?:\\@[_a-zA-Z0-9]{1,17})|(?:(?:(?:(?:http|https|irc)?:\\/\\/(?:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+(?:\\:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+)?\\@)?)?(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]*\\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|j[emop]|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|museum|m[acdeghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\\:\\d{1,5})?)(?:\\/(?:(?:[!#&-;=?-Z_a-z~])|(?:\\%[a-fA-F0-9]{2}))*)?)(?=\\b|\\s|$)/';
+  // ccTLD compressed regular expression clauses (re)created.
+  // .mobi .jobs deliberately excluded to discourage layer violations.
+  // part of $re derived from Android Open Source Project, Apache 2.0
+  // with a bunch of subsequent fixes/improvements (e.g. ttk.me/t44H2)
+  // thus auto_link_re is also Apache 2.0 licensed
+  //  http://www.apache.org/licenses/LICENSE-2.0
+  // - Tantek 2010-046 (moved to auto_link_re 2012-062)
+}
+
 // auto_link: param 1: text; param 2: do embeds or not
 // auto_link is idempotent, works on plain text or typical markup.
 function auto_link() { 
@@ -1011,16 +1026,8 @@ function auto_link() {
   }
   $t = $args[0];
   $do_embed = (count($args) > 1) && ($args[1]!==false);
-  // ccTLD compresed regular expression clauses (re)created.
-  // .mobi and .jobs excluded to avoid encouraging layer violations
-  // $re partly from Android Open Source Project under Apache 2.0
-  // with a bunch of subsequent fixes/improvements, e.g.:
-  //  http://ttk.me/t44H2)
-  //  and added auto_linking Twitter @-names (except CSS @-rules).
-  // this entire function in particular is also Apache 2.0 licensed
-  //  http://www.apache.org/licenses/LICENSE-2.0
-  // - Tantek 2010-046
-  $re = '/(?:\\@[_a-zA-Z0-9]{1,17})|(?:(?:(?:(?:http|https|irc)?:\\/\\/(?:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+(?:\\:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+)?\\@)?)?(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]*\\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|j[emop]|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|museum|m[acdeghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\\:\\d{1,5})?)(?:\\/(?:(?:[!#&-;=?-Z_a-z~])|(?:\\%[a-fA-F0-9]{2}))*)?)(?=\\b|\\s|$)/';
+
+  $re = auto_link_re();
   $ms = preg_matches($re, $t);
   if (!$ms) {
     return $t;
@@ -1108,6 +1115,68 @@ function auto_link() {
   return strcat($t, $sp[$mlen]);
 }
 
+
+// replace URLs with http://j.mp/00112358 to mimic Twitter's t.co
+function tw_text_proxy() {
+  /// ?> <!--   ///
+  var $args, $afterchar, $afterlink, $i, $isjs,
+      $mlen, $ms, $re, 
+      $sp, $spe, $spliti; 
+  /// --> <?php ///
+  
+  $isjs = js();
+  $args = $isjs ? arguments : func_get_args();
+  if (count($args) === 0) {
+    return '';
+  }
+  $t = $args[0];
+
+  $re = auto_link_re();
+  $ms = preg_matches($re, $t);
+  if (!$ms) {
+    return $t;
+  }
+
+  $mlen = count($ms);
+  $sp = preg_split($re, $t);
+  $t = "";
+  $sp[0] = string($sp[0]); // force undefined to ""
+  for ($i=0; $i<$mlen; $i++) {
+    $matchi = $ms[$i];
+    $spliti = $sp[$i];
+    $t = strcat($t, $spliti);
+    $sp[$i+1] = string($sp[$i+1]); // force undefined to ""
+    if (substr($sp[$i+1], 0, 1)=='/') { // regex omits '/' before </a
+      $sp[$i+1] = substr($sp[$i+1], 1, strlen($sp[$i+1])-1);
+      $matchi = strcat($matchi, '/'); // explicitly include in match
+    }
+    $spe = substr($spliti, -2, 2);
+    // avoid double-linking or attr values (*** will twitter do that?)
+    // and don't proxy @-names
+    if ((!$spe || !preg_match('/(?:\\=[\\"\\\']?|t;)/', $spe)) &&
+        substr(trim($sp[$i+1]),0,3)!='</a' && $matchi[0]!='@' &&
+        (substr($matchi,-3,1)!='.' || substr_count($matchi, '.')>1)) {
+      $afterlink = '';
+      $afterchar = substr($matchi, -1, 1);
+      while (contains('.!?,;"\')]}', $afterchar) && // trim punc @ end
+          ($afterchar!=')' || !contains($matchi,'('))) { 
+          // allow one paren pair
+          // *** not sure twitter is this smart
+          $afterlink = strcat($afterchar, $afterlink);
+          $matchi = substr($matchi, 0, -1);
+          $afterchar = substr($matchi, -1, 1);
+      }
+      
+      $t = strcat($t, 'http://j.mp/00112358', $afterlink);
+    }
+    else {
+      $t = strcat($t, $matchi);
+    }
+  }
+  return strcat($t, $sp[$mlen]);
+}
+
+
 // note_length_check:
 // checks if $note fits in $maxlen characters.
 // if $username is non-empty, checks if RT'd $note fits in $maxlen
@@ -1134,6 +1203,13 @@ function note_length_check($note, $maxlen, $username) {
   if ($note_size_chk_n - $note_size_chk_u === $maxlen) { return 208; }
   return 413;
 }
+
+function tw_length_check($t, $maxlen, $username) {
+  return note_length_check(tw_text_proxy($t), 
+                           $maxlen, $username);
+}
+
+
 
 // ===================================================================
 // end CASSIS v0.1, cassis.js
