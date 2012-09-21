@@ -1082,7 +1082,7 @@ function auto_link() {
         if (!strncmp($wmi,'http://youtu.be/',16)) {
           $yvid = substr($wmi, 16);
         } else {
-          $yvid = explode('&', substr($mi, $yvid+8));
+          $yvid = explode('&', substr($mi, $yvid+7));
           $yvid = $yvid[0];
         }
         $t = strcat($t, '<a class="auto-link" href="',
