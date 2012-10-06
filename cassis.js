@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2011 Tantek Çelik http://tantek.com 
+   cassis.js Copyright 2008-2012 Tantek Çelik http://tantek.com 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license:http://creativecommons.org/licenses/by-sa/3.0/         -->
 if you see this in the browser, you need to wrap your PHP include of cassis.js and use thereof with calls to ob_start and ob_end_clean, e.g.:
@@ -1068,6 +1068,13 @@ function auto_link() {
         $t = strcat($t, '<a class="auto-link figure" href="',      
                     $wmi, '"><img src="', 
                     $wmi, '"/></a>', 
+                    $afterlink);
+      } else if ($fe && 
+                 ($fe === '.mp4' || $fe === '.mov' || $fe === '.ogv'))
+      {
+        $t = strcat($t, '<a class="auto-link figure" href="',      
+                    $wmi, '"><video controls="controls" src="', 
+                    $wmi, '"></video></a>', 
                     $afterlink);
       } else if (!strncmp($wmi, 'http://vimeo.com/' ,17) && 
                  ctype_digit(substr($wmi, 17))) {
