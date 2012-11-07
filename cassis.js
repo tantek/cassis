@@ -507,6 +507,9 @@ function sxgtonumf($s, $f) {
 
 function date_create_ymd($s) { /// ?> <!--   ///
   var $d;                      /// --> <?php ///
+  if ($s === 0) {
+    return (js() ? new Date() : new DateTime());
+  }
   if (js()) { 
     if (substr($s,4,1)==='-') {
       $s=strcat(substr($s,0,4), substr($s,5,2), substr($s,8,2));
@@ -586,9 +589,9 @@ function bim_from_od($d) {
 function date_get_bim() { /// ?> <!--   ///
   var $args;              /// --> <?php ///
   $args = js() ? arguments : func_get_args();
-  return bim_from_od(date_get_ordinal_days(
-          (count($args) > 0) ? $args[0]
-                             : (js() ? new Date() : new DateTime())));
+  return bim_from_od(
+          date_get_ordinal_days(
+           date_create_ymd((count($args) > 0) ? $args[0] : 0)));
 }
 
 function get_nm_str($m) { /// ?> <!--   ///
@@ -605,8 +608,7 @@ function nm_from_od($d) {
 function date_get_ordinal_date() { /// ?> <!--   ///
   var $args, $d;                   /// --> <?php ///
   $args = js() ? arguments : func_get_args();
-  $d = (count($args) > 0) ? $args[0]
-                          : (js() ? new Date() : new DateTime());
+  $d = date_create_ymd((count($args) > 0) ? $args[0] : 0);
   return strcat(date_get_full_year($d), '-',
                 str_pad_left(date_get_ordinal_days($d), 3, "0"));
 }
