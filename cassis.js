@@ -1123,7 +1123,7 @@ function tw_text_proxy() {
   /// ?> <!--   ///
   var $args, $afterchar, $afterlink, $i, $isjs,
       $mlen, $ms, $re, 
-      $sp, $spe, $spliti; 
+      $sp, $spe, $spliti, $prot, $proxy_url; 
   /// --> <?php ///
   
   $isjs = js();
@@ -1169,7 +1169,16 @@ function tw_text_proxy() {
           $afterchar = substr($matchi, -1, 1);
       }
       
-      $t = strcat($t, 'http://j.mp/00112358', $afterlink);
+      $prot = substr($matchi, 0, 6); // irc:// http:/ https:
+      $proxy_url = '';
+      if ($prot === 'https:') { 
+        $proxy_url = 'https://j.mp/00112358';
+      } else if ($prot === 'irc://') {
+        $proxy_url = $matchi; // Twitter doesn't tco irc: URLs
+      } else { /* 'http:/' or presumed for schemeless URLs */ 
+        $proxy_url = 'http://j.mp/00112358';
+      }
+      $t = strcat($t, $proxy_url, $afterlink);
     }
     else {
       $t = strcat($t, $matchi);
