@@ -300,22 +300,12 @@ function doevent(el, evt) {
   }
 }
 
-// from http://www.quirksmode.org/js/events_properties.html#target
-
 function targetelement(e) {
-  var targ;
-	if (!e) { 
-	  e = window.event; 
-	}
-	if (e.target) { 
-	  targ = e.target; 
-	} else if (e.srcElement) { 
-	  targ = e.srcElement; 
-	}
-	if (targ.nodeType === 3) { // defeat Safari bug
-		targ = targ.parentNode;
-	}
-	return targ;
+  var t;
+  e = e ? e : window.event;
+  t = e.target ? e.target : e.srcElement;
+  t = (t.nodeType == 3) ? t.parentNode : t; // Safari workaround
+  return t;
 }
 
 /// --> <?php ///
