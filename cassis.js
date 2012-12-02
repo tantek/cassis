@@ -621,7 +621,26 @@ function ymd_to_sdf($d, $f) {
   return num_to_sxgf(ymd_to_days($d), $f);
 }
 
-// ordinal date (YYYY-DDD) to epoch days, sexagesimal epoch days (sd)
+// ordinal date (YYYY-DDD) to ymd, epoch days, sexagesimal epoch days
+
+function ydp_to_ymd($y, $d) { /// ?> <!--   ///
+  var $md, $m;                /// --> <?php ///
+  $md = array(
+         array(0,31,59,90,120,151,181,212,243,273,304,334),
+         array(0,31,60,91,121,152,182,213,244,274,305,335));
+  $d -= 1;
+  $m = trunc($d / 29);
+  if ($md[isleap($y) - 0][$m] > $d) $m -= 1;
+  $d = $d - $md[isleap($y)-0][$m] + 1;
+  $m += 1;
+  return strcat($y, '-', str_pad_left($m, 2, '0'), 
+                    '-', str_pad_left($d, 2, '0'));
+}
+
+function yd_to_ymd($d) {
+  return ydp_to_ymd(substr($d, 0, 4), substr($d, 5, 3));
+}
+
 function yd_to_days($d) {
   return ymd_to_days(strcat(substr($d, 0, 4), '-01-01')) - 1 + 
          substr($d, 5, 3);
