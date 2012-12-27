@@ -1058,11 +1058,11 @@ function auto_link() {
       $mi = strcat($mi, '/'); // include / in the match
     }
     $spe = substr($spliti,-2,2);
-    // avoid double-linking, and don't link CSS @-rules, or attribute values
+    // avoid 2x-linking, don't link CSS @-rules, attr values, asciibet
     if ((!$spe || !preg_match('/(?:\\=[\\"\\\']?|t;)/', $spe)) &&
         substr(trim($sp[$i+1]), 0, 3)!=='</a' && 
         (!contains(
-            '@charset@font@font-face@import@media@namespace@page@',
+'@charset@font@font-face@import@media@namespace@page@ABCDEFGHIJKLMNOPQ@',
             strcat($mi, '@')))) {
       $afterlink = '';
       $afterchar = substr($mi, -1, 1);
