@@ -986,6 +986,13 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
   } else if ($s[$slen-1]==='p' && $slen > 4 &&
              substr($s, $slen-4, 4)==='http') {
     $slen -= 4;
+  } else if ($s[$slen-1]==='t' && $slen > 4 &&
+             (substr($s, $slen-3, 4)==='http' || 
+              substr($s, $slen-3, 4)===' htt')) {
+    $slen -= 3;
+  } else if ($s[$slen-1]==='h' && $slen > 4 &&
+             substr($s, $slen-1, 4)==='http') {
+    $slen -= 1;
   }
   
   //if char immediately before ellipsis would be @$ then trim it
