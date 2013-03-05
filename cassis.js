@@ -1122,6 +1122,10 @@ function auto_link() {
                     $wmi, '">', $mi, '</a> <iframe class="youtube-player auto-link figure" width="480" height="385" style="border:0"  src="http://www.youtube.com/embed/', 
                     $yvid, '"></iframe>', 
                     $afterlink);
+      } else if ($mi[0]==='@') {
+        $t = strcat($t, '<a class="auto-link h-x-username" href="',
+                    $wmi, '">', $mi, '</a>', 
+                    $afterlink);
       } else {
         $t = strcat($t, '<a class="auto-link" href="',
                     $wmi, '">', $mi, '</a>', 
