@@ -1241,6 +1241,18 @@ function tw_length_check($t, $maxlen, $username) {
                            $maxlen, $username);
 }
 
+function tw_url_to_status_id($u) {
+// $u - tweet permalink url
+// returns tweet status id string; 0 if not a tweet permalink.
+  if (!$u) return 0;
+  $u = explode("/", string($u)); // https:,,twitter.com,t,status,nnn
+  if ($u[2]!="twitter.com" || 
+      $u[4]!="status"      ||
+      !ctype_digit($u[5])) {
+    return 0;
+  }
+  return $u[5];
+}
 
 
 // ===================================================================
