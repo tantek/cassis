@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2012 Tantek Çelik http://tantek.com 
+   cassis.js Copyright 2008-2013 Tantek Çelik http://tantek.com 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license:http://creativecommons.org/licenses/by-sa/3.0/         -->
 if you see this in the browser, you need to wrap your PHP include of cassis.js and use thereof with calls to ob_start and ob_end_clean, e.g.:
@@ -1139,7 +1139,7 @@ function auto_link() {
 }
 
 
-// replace URLs with http://j.mp/00112358 to mimic Twitter's t.co
+// replace URLs with http://j.mp/0011235813 to mimic Twitter's t.co
 function tw_text_proxy() {
   /// ?> <!--   ///
   var $args, $afterchar, $afterlink, $i, $isjs,
@@ -1193,11 +1193,11 @@ function tw_text_proxy() {
       $prot = substr($matchi, 0, 6); // irc:// http:/ https:
       $proxy_url = '';
       if ($prot === 'https:') { 
-        $proxy_url = 'https://j.mp/00112358';
+        $proxy_url = 'https://j.mp/0011235813';
       } else if ($prot === 'irc://') {
         $proxy_url = $matchi; // Twitter doesn't tco irc: URLs
       } else { /* 'http:/' or presumed for schemeless URLs */ 
-        $proxy_url = 'http://j.mp/00112358';
+        $proxy_url = 'http://j.mp/0011235813';
       }
       $t = strcat($t, $proxy_url, $afterlink);
     }
