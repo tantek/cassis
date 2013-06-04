@@ -718,7 +718,7 @@ function web_address_to_uri($wa, $addhttp) {
   // use strtolower(substr($wa, 0, 6)); // handle capitals in URLs
 
   if (substr($wa,0,1) === '@') {
-    return strcat('http://twitter.com/', substr($wa, 1, strlen($wa)));
+    return strcat('https://twitter.com/', substr($wa, 1, strlen($wa)));
   }
 
   if ($addhttp) {
