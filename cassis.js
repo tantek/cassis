@@ -115,6 +115,10 @@ function ctype_digit(s) {
   return (/^[0-9]+$/).test(s);
 }
 
+function ctype_space(s) {
+ return /\s/.test(s);
+}
+
 // -------------------------------------------------------------------
 // date time functions
 
@@ -735,7 +739,8 @@ function uri_clean($uri) {
     $uri = $uri[1];
   }
   // URL encode
-  return str_ireplace("%2F", "/", rawurlencode($uri));
+  return str_ireplace("%3A", ":", 
+                      str_ireplace("%2F", "/", rawurlencode($uri)));
 }
 
 // -------------------------------------------------------------------
@@ -832,6 +837,10 @@ function offset($n, $h) {
 function contains($h, $n) {
 // HyperTalk syntax haystack contains needle: if ("abc" contains "b")
   return strpos($h, $n)!==false;
+}
+
+function last_character_of($s) {
+  return (strlen($s) > 0) ? $s[strlen($s)-1] : '';
 }
 
 function line_1_of($s) { /// ?> <!--   ///
