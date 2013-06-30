@@ -46,11 +46,11 @@ function date_get_timestamp($d) {
   return $d->format('U'); // $d->getTimestamp(); // in PHP 5.3+
 }
 
-/* mixed-case function names are bad for PHP vs JS. Don't do it.
-function Number($n) {
-  return $n-0;
-}
-*/
+// mixed-case function names are bad for PHP vs JS. Don't do it.
+//function Number($n) {
+//  return $n-0;
+//}
+
 
 // -------------------------------------------------------------------
 // old wrappers. transition code away from these
