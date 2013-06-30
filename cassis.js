@@ -46,9 +46,11 @@ function date_get_timestamp($d) {
   return $d->format('U'); // $d->getTimestamp(); // in PHP 5.3+
 }
 
+/* mixed-case function names are bad for PHP vs JS. Don't do it.
 function Number($n) {
   return $n-0;
 }
+*/
 
 // -------------------------------------------------------------------
 // old wrappers. transition code away from these
@@ -330,6 +332,10 @@ function strcat() {         /// ?> <!--   ///
   return $r;
 }
 
+function number($s) {
+ return $s - 0;
+}
+
 function string($n) {
   if (js()) { 
     if (typeof($n)==="number") {
@@ -552,7 +558,7 @@ function ymdp_to_d($y, $m, $d) { /// ?> <!--   ///
   $md = array(
          array(0,31,59,90,120,151,181,212,243,273,304,334),
          array(0,31,60,91,121,152,182,213,244,274,305,335));
-  return $md[Number(isleap($y))][$m-1] + Number($d);
+  return $md[number(isleap($y))][$m-1] + number($d);
 }
 
 function ymdp_to_yd($y, $m, $d) {
@@ -610,12 +616,27 @@ function date_get_ordinal_date() { /// ?> <!--   ///
 // -------------------------------------------------------------------
 // begin epochdays
 
+function y_to_days($y) {
+  // convert y-01-01 to epoch days
+  return floor(
+   (date_get_timestamp(date_create_ymd(strcat($y, "-01-01"))) -
+    date_get_timestamp(date_create_ymd("1970-01-01")))/86400);
+}
+
 // convert ymd to epoch days and sexagesimal epoch days (sd)
+
 function ymd_to_days($d) {
+  return yd_to_days(ymd_to_yd($d));
+}
+
+/* old:
+function ymd_to_days($d) {
+  // fails in JS, "2013-03-10" and "2013-03-11" both return 15774 
   return floor(
    (date_get_timestamp(date_create_ymd($d)) -
     date_get_timestamp(date_create_ymd("1970-01-01")))/86400);
 }
+*/
 
 function ymd_to_sd($d) {
   return num_to_sxg(ymd_to_days($d));
@@ -646,8 +667,7 @@ function yd_to_ymd($d) {
 }
 
 function yd_to_days($d) {
-  return ymd_to_days(strcat(substr($d, 0, 4), '-01-01')) - 1 + 
-         substr($d, 5, 3);
+  return y_to_days(substr($d, 0, 4)) - 1 + number(substr($d, 5, 3));
 }
 
 function yd_to_sd($d) {
@@ -926,8 +946,8 @@ function vcpdtreadable($d) { return vcp_dt_readable($d); }
 function whistle_short_path($p) {
   return strcat(substr($p, 9, 1),
                 ((substr($p, 9, 1)!=='t') ? "/" : ""),
-                ydtosdf(substr($p, 0, 8), 3),
-                numtosxg(substr($p, 10, 3)));
+                yd_to_sdf(substr($p, 0, 8), 3),
+                num_to_sxg(substr($p, 10, 3)));
 }
 
 // -------------------------------------------------------------------
