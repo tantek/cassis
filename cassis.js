@@ -155,11 +155,11 @@ function strlen(s) {
 
 function substr(s, o, n) {
   var m = strlen(s);
-  if (Math.abs(o) >= m) { return false; }
+  if ((o < 0 ? -1-o : o) >= m) { return false; }
   if (o < 0) { o = m + o; }
   if (n < 0) { n = m - o + n; }
   if (n === undefined) { n = m - o; }
-  return s.substring(o, o+n);
+  return s.substring(o, o + n);
 }
 
 function substr_count(s, n) {
@@ -424,6 +424,11 @@ function preg_matches($p, $s) { /// ?> <!--   ///
       return null; //array();
     }
   }
+}
+
+function ctype_email_local($s) {
+ // close enough. no '.' because this is used for last char of.
+ return (preg_match("/^[a-zA-Z0-9_%+-]+$/", $s));
 }
 
 // -------------------------------------------------------------------
@@ -1094,7 +1099,7 @@ function auto_link() {
       $sp[$i+1] = substr($sp[$i+1], 1, strlen($sp[$i+1])-1);
       $mi = strcat($mi, '/'); // include / in the match
     }
-    $spe = substr($spliti,-2,2);
+    $spe = substr($spliti, -2, 2);
     // avoid 2x-linking, don't link CSS @-rules, attr values, asciibet
     if ((!$spe || !preg_match('/(?:\\=[\\"\\\']?|t;)/', $spe)) &&
         substr(trim($sp[$i+1]), 0, 3)!=='</a' && 
@@ -1152,9 +1157,18 @@ function auto_link() {
                     $yvid, '"></iframe>', 
                     $afterlink);
       } else if ($mi[0]==='@') {
-        $t = strcat($t, '<a class="auto-link h-x-username" href="',
-                    $wmi, '">', $mi, '</a>', 
-                    $afterlink);
+        if ($sp[$i+1][0] == '.' && 
+            $spliti != '' &&
+            ctype_email_local(substr($spliti, -1, 1))) {
+          // if email address, simply append info, no linking
+          $t = strcat($t, $mi, $afterlink);
+        }
+        else {
+          // treat it as a Twitter @-username reference and link it
+          $t = strcat($t, '<a class="auto-link h-x-username" href="',
+                      $wmi, '">', $mi, '</a>', 
+                      $afterlink);
+        }
       } else {
         $t = strcat($t, '<a class="auto-link" href="',
                     $wmi, '">', $mi, '</a>', 
