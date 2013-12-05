@@ -566,6 +566,14 @@ function ymdp_to_d($y, $m, $d) { /// ?> <!--   ///
   return $md[number(isleap($y))][$m-1] + number($d);
 }
 
+function ymd_to_d($d) {
+  if (substr($d, 4, 1)==='-') {
+    return ymdp_to_d(substr($d,0,4),substr($d,5,2),substr($d,8,2));
+  } else {
+    return ymdp_to_d(substr($d,0,4),substr($d,4,2),substr($d,6,2));
+  }
+}
+
 function ymdp_to_yd($y, $m, $d) {
   return strcat(str_pad_left($y, 4, "0"), '-',
                 str_pad_left(ymdp_to_d($y, $m, $d), 3, "0"));
@@ -1039,6 +1047,13 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
     $slen-=2;
   }
 
+  // trim extra whitespace before ellipsis down to one space
+  if ($slen > 2 && contains("\n ", $s[$slen-1])) {
+    while (contains("\n ", $s[$slen-2]) && $slen > 2) {
+      --$slen;
+    }
+  }
+
   if ($slen < 1) { // somehow shortened too much
     return $e; // or ellipsis by itself exceeded max, return ellipsis.
   }
@@ -1182,6 +1197,57 @@ function auto_link() {
 }
 
 
+// returns array of URLs after literal "in-reply-to:" in text
+function get_in_reply_to_urls($s) {
+  /// ?> <!--   ///
+  var $irtn, $r, $re, $i, $j,
+      $ms, $sp, $afterlink, $ac; 
+  /// --> <?php ///
+  
+  $s = explode('in-reply-to: ', $s);
+  $irtn = count($s);
+  if ($irtn < 2) { return array(); }
+  $r = array();
+  $re = auto_link_re();
+  for ($i=1; $i<$irtn; $i++) {
+    // iterate through all strings after an 'in-reply-to: ' for URLs
+    $ms = preg_matches($re, $s[$i]);
+    $msn = count($ms);
+    if ($ms) {
+      $sp = preg_split($re, $s[$i]);
+      $j = 0;
+      $afterlink = '';
+      while ($j<$msn && 
+             $afterlink == '' &&
+             ($sp[$j] == '' || ctype_space($sp[$j]))) {
+        // iterate through space separated URLs and add them to $r
+        $m = $ms[$j];
+        if ($m[0] != '@') { // skip @-references
+          $ac = substr($m, -1, 1);
+          while (contains('.!?,;"\')]}', $ac) && // trim punc @ end
+              ($ac != ')' || !contains($m, '('))) { 
+              // allow one paren pair
+              // *** not sure twitter is this smart
+              $afterlink = strcat($ac, $afterlink);
+              $m = substr($m, 0, -1);
+              $ac = substr($m, -1, 1);
+          }
+          if (substr($m, 0, 6) === 'irc://') { 
+            // skip it. no known use of in-reply-to an IRC URL
+          } else {
+            $r[count($r)] = webaddresstouri($m, true);
+          }
+        }
+        $j++;
+      }
+    }
+  } 
+  return $r;
+}
+
+
+// Twitter POSSE support
+
 // replace URLs with http://j.mp/0011235813 to mimic Twitter's t.co
 function tw_text_proxy() {
   /// ?> <!--   ///
@@ -1217,10 +1283,8 @@ function tw_text_proxy() {
       $matchi = strcat($matchi, '/'); // explicitly include in match
     }
     $spe = substr($spliti, -2, 2);
-    // avoid double-linking or attr values (*** will twitter do that?)
-    // and don't proxy @-names
-    if ((!$spe || !preg_match('/(?:\\=[\\"\\\']?|t;)/', $spe)) &&
-        substr(trim($sp[$i+1]),0,3)!='</a' && $matchi[0]!='@' &&
+    // don't proxy @-names, plain ccTLDs
+    if ($matchi[0]!='@' &&
         (substr($matchi,-3,1)!='.' || substr_count($matchi, '.')>1)) {
       $afterlink = '';
       $afterchar = substr($matchi, -1, 1);
