@@ -25,4 +25,5 @@ Signed: name, http URL, date (ISO8601, ordinal preferred)
 * Joel Franusic, http://joel.franusic.com, 2011-004
 * Edward O'Connor, http://edward.oconnor.cx, 2011-004
 * Barnaby Walters, http://waterpigs.co.uk, 2012-242
+* Matthias Pfefferle, http://notizblog.org, 2013-170
 * ...

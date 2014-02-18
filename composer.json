@@ -1,6 +1,6 @@
 {
 	"name": "tantek/cassis",
 	"autoload": {
-        	"files": ["cassis.js"] 
+        	"files": ["cassis-loader.php"] 
 	}
 }
