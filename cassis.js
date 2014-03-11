@@ -75,8 +75,19 @@ function array() { // makes an array from arbitrary parameter list.
   return Array.prototype.slice.call(arguments);
 }
 
+function is_array(a) {
+  return (typeof(a) === "object") && (a instanceof Array);
+}
+
 function count(a) {
   return a.length;
+}
+
+function array_slice(a, b, e) { // slice an array, begin, optional end
+  if (a === undefined) { return array(); }
+  if (b === undefined) { return a; }
+  if (e === undefined) { return a.slice(b); }
+  return a.slice(b, e);
 }
 
 // -------------------------------------------------------------------
@@ -88,10 +99,6 @@ function floor(n) {
 
 function intval(n) {
   return parseInt(n, 10);
-}
-
-function is_array(a) {
-  return (typeof(a) === "object") && (a instanceof Array);
 }
 
 Array.min = function(a) { 
@@ -767,13 +774,55 @@ function web_address_to_uri($wa, $addhttp) {
 function uri_clean($uri) {
   $uri = web_address_to_uri($uri, false);
   // prune the optional http:// for a neater param
-  if (substr($uri, 0, 7) === "http://") {
-    $uri = explode("://", $uri, 2);
-    $uri = $uri[1];
+  if (substr($uri, 0, 7) === 'http://') {
+    $uri = explode('://', $uri);
+    $uri = array_slice($uri, 1);
+    $uri = implode('://', $uri);
   }
   // URL encode
   return str_ireplace("%3A", ":", 
                       str_ireplace("%2F", "/", rawurlencode($uri)));
+}
+
+function protocol_of_uri($uri) {
+  $uri = explode(':', $uri, 2);
+  return strcat($uri[0], ':');
+}
+
+function hostname_of_uri($uri) {
+  $uri = explode('/', $uri, 4);
+  if (count($uri) > 2) {
+    $uri = $uri[2];
+    if (offset(':', $uri) !== 0) {
+      $uri = explode(':', $uri, 2);
+      $uri = $uri[0];
+    }
+    return $uri;
+  }   
+  return '';
+}
+
+function path_of_uri($uri) {
+  $uri = explode('/', $uri, 4);
+  if (count($uri) > 3) {
+    $uri = array_slice($uri, 3);
+    $uri = strcat('/', implode('/', $uri));
+    if (offset('?', $uri) !== 0) {
+      $uri = explode('?', $uri, 2);
+      $uri = $uri[0];
+    }
+    if (offset('#', $uri) !== 0) {
+      $uri = explode('#', $uri, 2);
+      $uri = $uri[0];
+    }
+    return $uri;    
+  }
+  return '/';
+}
+
+function is_http_uri($uri) {
+  $uri = explode(":", $uri, 1);
+  return !!strncmp($uri, "http", 4);
 }
 
 // -------------------------------------------------------------------
@@ -1132,11 +1181,15 @@ function auto_link() {
       
       $fe = 0;
       if ($do_embed) {
-        $fe = (substr($mi,-4,1)==='.') ? 
-               substr($mi,-4,4) :
-               substr($mi,-5,5);
+        $fe = (substr($mi, -4, 1)==='.') ? 
+               substr($mi, -4, 4) :
+               substr($mi, -5, 5);
       }
       $wmi = web_address_to_uri($mi, true);
+      $prot = protocol_of_uri($wmi);
+      $hn = hostname_of_uri($wmi);
+      $pa = path_of_uri($wmi);
+      $ih = is_http_uri($wmi);
       if ($fe && 
           ($fe === '.jpeg' || $fe === '.jpg' || $fe === '.png' || 
            $fe === '.gif')) {
@@ -1151,28 +1204,27 @@ function auto_link() {
                     $wmi, '"><video controls="controls" src="', 
                     $wmi, '"></video></a>', 
                     $afterlink);
-      } else if (!strncmp($wmi, 'http://vimeo.com/' ,17) && 
-                 ctype_digit(substr($wmi, 17))) {
+      } else if ($ih && $hn === 'vimeo.com' 
+                     && ctype_digit(substr($pa, 1))) {
         $t = strcat($t, '<a class="auto-link" href="',
-                    $wmi, '">', $mi, '</a> <iframe class="vimeo-player auto-link figure" width="480" height="385" style="border:0"  src="http://player.vimeo.com/video/', 
-                    substr($wmi, 17), '"></iframe>', 
+                    $wmi, '">', $mi, '</a> <iframe class="vimeo-player auto-link figure" width="480" height="385" style="border:0"  src="', $prot, '//player.vimeo.com/video/', 
+                    substr($pa, 1), '"></iframe>', 
                     $afterlink);
-      } else if (!strncmp($wmi, 'http://youtu.be/', 16) ||
-                 ((!strncmp($wmi, 'http://youtube.com/', 19) ||
-                   !strncmp($wmi, 'http://www.youtube.com/', 23)) &&
-                  ($yvid = offset('watch?v=', $mi))!==0)) {
-        if (!strncmp($wmi,'http://youtu.be/',16)) {
-          $yvid = substr($wmi, 16);
+      } else if ($hn === 'youtu.be' ||
+                (($hn === 'youtube.com' || $hn === 'www.youtube.com')
+                 && ($yvid = offset('watch?v=', $mi)) !== 0)) {
+        if ($hn === 'youtu.be') {
+          $yvid = substr($pa, 1);
         } else {
           $yvid = explode('&', substr($mi, $yvid+7));
           $yvid = $yvid[0];
         }
         $t = strcat($t, '<a class="auto-link" href="',
-                    $wmi, '">', $mi, '</a> <iframe class="youtube-player auto-link figure" width="480" height="385" style="border:0"  src="http://www.youtube.com/embed/', 
+                    $wmi, '">', $mi, '</a> <iframe class="youtube-player auto-link figure" width="480" height="385" style="border:0" src="', $prot, '//www.youtube.com/embed/', 
                     $yvid, '"></iframe>', 
                     $afterlink);
-      } else if ($mi[0]==='@') {
-        if ($sp[$i+1][0] == '.' && 
+      } else if ($mi[0] === '@') {
+        if ($sp[$i+1][0] === '.' && 
             $spliti != '' &&
             ctype_email_local(substr($spliti, -1, 1))) {
           // if email address, simply append info, no linking
@@ -1274,42 +1326,42 @@ function tw_text_proxy() {
   $t = "";
   $sp[0] = string($sp[0]); // force undefined to ""
   for ($i=0; $i<$mlen; $i++) {
-    $matchi = $ms[$i];
+    $mi = $ms[$i];
     $spliti = $sp[$i];
     $t = strcat($t, $spliti);
     $sp[$i+1] = string($sp[$i+1]); // force undefined to ""
     if (substr($sp[$i+1], 0, 1)=='/') { // regex omits '/' before </a
       $sp[$i+1] = substr($sp[$i+1], 1, strlen($sp[$i+1])-1);
-      $matchi = strcat($matchi, '/'); // explicitly include in match
+      $mi = strcat($mi, '/'); // explicitly include in match
     }
     $spe = substr($spliti, -2, 2);
     // don't proxy @-names, plain ccTLDs
-    if ($matchi[0]!='@' &&
-        (substr($matchi,-3,1)!='.' || substr_count($matchi, '.')>1)) {
+    if ($mi[0]!='@' &&
+        (substr($mi, -3, 1) !== '.' || substr_count($mi, '.') > 1)) {
       $afterlink = '';
-      $afterchar = substr($matchi, -1, 1);
+      $afterchar = substr($mi, -1, 1);
       while (contains('.!?,;"\')]}', $afterchar) && // trim punc @ end
-          ($afterchar!=')' || !contains($matchi,'('))) { 
+          ($afterchar !== ')' || !contains($mi, '('))) { 
           // allow one paren pair
           // *** not sure twitter is this smart
           $afterlink = strcat($afterchar, $afterlink);
-          $matchi = substr($matchi, 0, -1);
-          $afterchar = substr($matchi, -1, 1);
+          $mi = substr($mi, 0, -1);
+          $afterchar = substr($mi, -1, 1);
       }
       
-      $prot = substr($matchi, 0, 6); // irc:// http:/ https:
+      $prot = protocol_of_uri($mi);
       $proxy_url = '';
       if ($prot === 'https:') { 
         $proxy_url = 'https://j.mp/0011235813';
-      } else if ($prot === 'irc://') {
-        $proxy_url = $matchi; // Twitter doesn't tco irc: URLs
+      } else if ($prot === 'irc:') {
+        $proxy_url = $mi; // Twitter doesn't tco irc: URLs
       } else { /* 'http:/' or presumed for schemeless URLs */ 
         $proxy_url = 'http://j.mp/0011235813';
       }
       $t = strcat($t, $proxy_url, $afterlink);
     }
     else {
-      $t = strcat($t, $matchi);
+      $t = strcat($t, $mi);
     }
   }
   return strcat($t, $sp[$mlen]);
