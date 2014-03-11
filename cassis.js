@@ -821,8 +821,8 @@ function path_of_uri($uri) {
 }
 
 function is_http_uri($uri) {
-  $uri = explode(":", $uri, 1);
-  return !!strncmp($uri, "http", 4);
+  $uri = explode(":", $uri, 2);
+  return !!strncmp($uri[0], "http", 4);
 }
 
 // -------------------------------------------------------------------
