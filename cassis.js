@@ -1181,9 +1181,9 @@ function auto_link() {
       
       $fe = 0;
       if ($do_embed) {
-        $fe = (substr($mi, -4, 1)==='.') ? 
-               substr($mi, -4, 4) :
-               substr($mi, -5, 5);
+        $fe = strtolower(
+               (substr($mi, -4, 1)==='.') ? substr($mi, -4, 4) 
+                                          : substr($mi, -5, 5));
       }
       $wmi = web_address_to_uri($mi, true);
       $prot = protocol_of_uri($wmi);
