@@ -265,6 +265,10 @@ function strtolower(s) {
   return s.toLowerCase();
 }
 
+function ucfirst(s) {
+  return s.charAt(0).toUpperCase() + substr(s, 1);
+}
+
 // -------------------------------------------------------------------
 // more javascript-only php-equivalent functions here 
 
@@ -800,6 +804,15 @@ function hostname_of_uri($uri) {
     return $uri;
   }   
   return '';
+}
+
+function sld_of_uri($uri) {
+  $uri = hostname_of_uri($uri);
+  $uri = explode('.', $uri);
+  if (count($uri) > 1) {
+    return $uri[count($uri) - 2];
+  }
+  return "";
 }
 
 function path_of_uri($uri) {
