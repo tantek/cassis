@@ -561,6 +561,22 @@ function date_get_rfc3339($d) {
   }
 }
 
+function dt_to_time($dt) {
+  $dt = explode("T", $dt);
+  if (count($dt)==1) {
+    $dt = explode(" ", $dt);
+  }
+  return (count($dt)>1) ? $dt[1] : "0:00";
+}
+
+function dt_to_date($dt) {
+  $dt = explode("T", $dt);
+  if (count($dt)==1) {
+    $dt = explode(" ", $dt);
+  }
+  return $dt[0];
+}
+
 
 // -------------------------------------------------------------------
 // newcal
