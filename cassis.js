@@ -1222,8 +1222,11 @@ function auto_link() {
       if ($fe && 
           ($fe === '.jpeg' || $fe === '.jpg' || $fe === '.png' || 
            $fe === '.gif')) {
+        $alt = strcat('a ',
+                      (offset('photo', $mi) != 0) ? 'photo' 
+                                                  : substr($fe, 1));
         $t = strcat($t, '<a class="auto-link figure" href="',      
-                    $wmi, '"><img src="', 
+                    $wmi, '"><img alt="', $alt, '" src="', 
                     $wmi, '"/></a>', 
                     $afterlink);
       } else if ($fe && 
@@ -1441,6 +1444,20 @@ function tw_url_to_status_id($u) {
   }
   return $u[5];
 }
+
+function tw_url_to_username($u) {
+// $u - tweet permalink url
+// returns twitter username; 0 if not a tweet permalink.
+  if (!$u) return 0;
+  $u = explode("/", string($u)); // https:,,twitter.com,t,status,nnn
+  if ($u[2] != "twitter.com" || 
+      $u[4] != "status"      ||
+      !ctype_digit($u[5])) {
+    return 0;
+  }
+  return $u[3];
+}
+
 
 
 // ===================================================================
