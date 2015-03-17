@@ -1007,7 +1007,17 @@ function vcp_dt_readable($d) { /// ?> <!--   ///
   $d = explode("T", $d);
   $r = "";
   if (count($d)>1) { 
-    $r = strcat('<time class="value">', $d[1], '</time> on ');
+     $r = explode("-", $d[1]);
+     if (count($d)==1) {
+			 $r = explode("+", $d[1]);
+     }
+     if (count($d)>1) {
+       $r = strcat('<time class="value" datetime="',$d[1],'">', 
+                   $r[0],'</time> on ');
+     }
+     else {
+       $r = strcat('<time class="value">',$d[1],'</time> on ');
+     }
   }
   return strcat($r, '<time class="value">', $d[0], '</time>');
 }
