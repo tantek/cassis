@@ -4,7 +4,7 @@
   "description": "",
   "main": "cassis.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/*.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/tantek/cassis/issues"
   },
-  "homepage": "http://tantek.pbworks.com/w/page/19402872/CassisProject"
+  "homepage": "http://tantek.pbworks.com/w/page/19402872/CassisProject",
+  "devDependencies": {
+    "tap-spec": "^2.2.2",
+    "tape": "^3.5.0"
+  }
 }
