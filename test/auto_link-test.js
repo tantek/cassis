@@ -22,6 +22,18 @@ var links = [
     expect: 'this string definately has a ' +
     '<a class="auto-link" href="http://link.com">link.com</a> in it',
     msg: 'auto_link simple .com links'
+  },
+  {
+    str: 'This has an academic.edu link',
+    expect: 'This has an ' +
+    '<a class="auto-link" href="http://academic.edu">academic.edu</a> link',
+    msg: 'auto_link simple .edu links'
+  },
+  {
+    str: 'This has an nerd.io link',
+    expect: 'This has an ' +
+    '<a class="auto-link" href="http://nerd.io">nerd.io</a> link',
+    msg: 'auto_link simple .io links'
   }
 ]
 
