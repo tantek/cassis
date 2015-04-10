@@ -26,4 +26,5 @@ Signed: name, http URL, date (ISO8601, ordinal preferred)
 * Edward O'Connor, http://edward.oconnor.cx, 2011-004
 * Barnaby Walters, http://waterpigs.co.uk, 2012-242
 * Matthias Pfefferle, http://notizblog.org, 2013-170
+* Bret Comnes, http://bret.io, 2015-100
 * ...
