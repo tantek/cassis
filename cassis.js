@@ -523,7 +523,7 @@ function sxgtonumf($s, $f) {
 
 function date_create_ymd($s) { /// ?> <!--   ///
   var $d;                      /// --> <?php ///
-  if ($s === 0) {
+  if (!$s) {
     return (js() ? new Date() : new DateTime());
   }
   if (js()) { 
@@ -577,6 +577,9 @@ function dt_to_date($dt) {
   return $dt[0];
 }
 
+function dt_to_ordinal_date($dt) {
+  return ymd_to_yd(dt_to_date($dt));
+}
 
 // -------------------------------------------------------------------
 // newcal
