@@ -1471,7 +1471,11 @@ function tw_url_to_username($u) {
   return $u[3];
 }
 
-
+// CommonJS (node, browserify, npm) Exports
+if (js() && typeof exports !== 'undefined' && 
+    typeof module !== 'undefined' && module.exports) {
+  exports.auto_link = auto_link;
+}
 
 // ===================================================================
 // end CASSIS v0.1, cassis.js
