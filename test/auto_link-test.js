@@ -18,21 +18,21 @@ test('auto_link noops', function (t) {
 
 var links = [
   {
-    str: 'this string definately has a link.com in it',
-    expect: 'this string definately has a ' +
-    '<a class="auto-link" href="http://link.com">link.com</a> in it',
+    str: 'this string definitely has a link to tantek.com in it',
+    expect: 'this string definitely has a link to ' +
+    '<a class="auto-link" href="http://tantek.com">tantek.com</a> in it',
     msg: 'auto_link simple .com links'
   },
   {
-    str: 'This has an academic.edu link',
-    expect: 'This has an ' +
-    '<a class="auto-link" href="http://academic.edu">academic.edu</a> link',
+    str: 'This has a stanford.edu link',
+    expect: 'This has a ' +
+    '<a class="auto-link" href="http://stanford.edu">stanford.edu</a> link',
     msg: 'auto_link simple .edu links'
   },
   {
-    str: 'This has an nerd.io link',
-    expect: 'This has an ' +
-    '<a class="auto-link" href="http://nerd.io">nerd.io</a> link',
+    str: 'This has a bret.io link',
+    expect: 'This has a ' +
+    '<a class="auto-link" href="http://bret.io">bret.io</a> link',
     msg: 'auto_link simple .io links'
   }
 ];
