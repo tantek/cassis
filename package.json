@@ -1,0 +1,34 @@
+{
+  "name": "cassis",
+  "version": "0.1.0",
+  "description": "",
+  "main": "cassis.js",
+  "scripts": {
+    "test": "tape test/*.js | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tantek/cassis.git"
+  },
+  "keywords": [
+    "functional programming",
+    "math",
+    "datetime computations",
+    "string processing",
+    "parsing",
+    "form validation"
+  ],
+  "author": {
+    "name": "Tantek Çelik",
+    "url": "http://tantek.com/"
+  },
+  "license": "CC BY-SA 3.0",
+  "bugs": {
+    "url": "https://github.com/tantek/cassis/issues"
+  },
+  "homepage": "http://tantek.pbworks.com/w/page/19402872/CassisProject",
+  "devDependencies": {
+    "tap-spec": "^2.2.2",
+    "tape": "^3.5.0"
+  }
+}

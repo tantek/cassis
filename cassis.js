@@ -325,6 +325,12 @@ function targetelement(e) {
   return t;
 }
 
+// CommonJS (node, browserify, npm) Exports
+if (typeof exports !== 'undefined' &&
+    typeof module !== 'undefined' && module.exports) {
+  exports.auto_link = auto_link;
+}
+
 /// --> <?php ///
 
 
