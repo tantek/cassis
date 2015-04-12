@@ -326,7 +326,7 @@ function targetelement(e) {
 }
 
 // CommonJS (node, browserify, npm) Exports
-if (js() && typeof exports !== 'undefined' &&
+if (typeof exports !== 'undefined' &&
     typeof module !== 'undefined' && module.exports) {
   exports.auto_link = auto_link;
 }
