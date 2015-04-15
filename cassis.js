@@ -1240,7 +1240,7 @@ function auto_link() {
       $ih = is_http_uri($wmi);
       if ($fe && 
           ($fe === '.jpeg' || $fe === '.jpg' || $fe === '.png' || 
-           $fe === '.gif')) {
+           $fe === '.gif' || $fe === '.svg')) {
         $alt = strcat('a ',
                       (offset('photo', $mi) != 0) ? 'photo' 
                                                   : substr($fe, 1));
