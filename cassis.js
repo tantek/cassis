@@ -1255,7 +1255,7 @@ function auto_link() {
                     $wmi, '"><video controls="controls" src="', 
                     $wmi, '"></video></a>', 
                     $afterlink);
-      } else if ($ih && $hn === 'vimeo.com' 
+      } else if ($hn === 'vimeo.com' 
                      && ctype_digit(substr($pa, 1))) {
         $t = strcat($t, '<a class="auto-link" href="',
                     $wmi, '">', $mi, '</a> <iframe class="vimeo-player auto-link figure" width="480" height="385" style="border:0"  src="', $prot, '//player.vimeo.com/video/', 
