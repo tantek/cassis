@@ -1175,7 +1175,9 @@ function auto_link_re() {
   // - Tantek 2010-046 (moved to auto_link_re 2012-062)
 }
 
-// auto_link: param 1: text; param 2: do embeds or not
+// auto_link: param 1: text; 
+//  optional: param 2: do embeds or not (false),
+//            param 3: do auto_links or not (true)
 // auto_link is idempotent, works on plain text or typical markup.
 function auto_link() { 
   /// ?> <!--   ///
@@ -1191,6 +1193,7 @@ function auto_link() {
   }
   $t = $args[0];
   $do_embed = (count($args) > 1) && ($args[1]!==false);
+  $do_link = (count($args) < 3) || ($args[2]!==false);
 
   $re = auto_link_re();
   $ms = preg_matches($re, $t);
@@ -1238,27 +1241,38 @@ function auto_link() {
       $hn = hostname_of_uri($wmi);
       $pa = path_of_uri($wmi);
       $ih = is_http_uri($wmi);
+
+      $ahref = '<span class="figure" style="text-align:left">';
+      $enda = '</span>';
+			if ($do_link) {
+        $ahref = strcat('<a class="auto-link figure" href="',      
+                        $wmi, '">');
+        $enda = '</a>';
+      }
+
       if ($fe && 
           ($fe === '.jpeg' || $fe === '.jpg' || $fe === '.png' || 
            $fe === '.gif' || $fe === '.svg')) {
         $alt = strcat('a ',
                       (offset('photo', $mi) != 0) ? 'photo' 
                                                   : substr($fe, 1));
-        $t = strcat($t, '<a class="auto-link figure" href="',      
-                    $wmi, '"><img alt="', $alt, '" src="', 
-                    $wmi, '"/></a>', 
-                    $afterlink);
+        $t = strcat($t, $ahref, '<img class="auto-embed" alt="', 
+                    $alt, '" src="', $wmi, '"/>', $enda, $afterlink);
       } else if ($fe && 
-                 ($fe === '.mp4' || $fe === '.mov' || $fe === '.ogv'))
+                 ($fe === '.mp4' || $fe === '.mov' || 
+                  $fe === '.ogv' || $fe === '.webm'))
       {
-        $t = strcat($t, '<a class="auto-link figure" href="',      
-                    $wmi, '"><video controls="controls" src="', 
-                    $wmi, '"></video></a>', 
-                    $afterlink);
+        $t = strcat($t, $ahref, '<video class="auto-embed" ',
+                    'controls="controls" src="', $wmi, '"></video>',
+                    $enda, $afterlink);
       } else if ($hn === 'vimeo.com' 
                      && ctype_digit(substr($pa, 1))) {
-        $t = strcat($t, '<a class="auto-link" href="',
-                    $wmi, '">', $mi, '</a> <iframe class="vimeo-player auto-link figure" width="480" height="385" style="border:0"  src="', $prot, '//player.vimeo.com/video/', 
+				if ($do_link) {
+				  $t = strcat($t, '<a class="auto-link" href="',
+                      $wmi, '">', $mi, '</a> ');
+				}
+
+        $t = strcat($t, '<iframe class="vimeo-player auto-embed figure" width="480" height="385" style="border:0" src="', $prot, '//player.vimeo.com/video/', 
                     substr($pa, 1), '"></iframe>', 
                     $afterlink);
       } else if ($hn === 'youtu.be' ||
@@ -1270,11 +1284,14 @@ function auto_link() {
           $yvid = explode('&', substr($mi, $yvid+7));
           $yvid = $yvid[0];
         }
-        $t = strcat($t, '<a class="auto-link" href="',
-                    $wmi, '">', $mi, '</a> <iframe class="youtube-player auto-link figure" width="480" height="385" style="border:0" src="', $prot, '//www.youtube.com/embed/', 
+				if ($do_link) {
+  				$t = strcat($t, '<a class="auto-link" href="',
+                      $wmi, '">', $mi, '</a> ');
+        }
+        $t = strcat($t, '<iframe class="youtube-player auto-embed figure" width="480" height="385" style="border:0"  src="', $prot, '//www.youtube.com/embed/', 
                     $yvid, '"></iframe>', 
                     $afterlink);
-      } else if ($mi[0] === '@') {
+      } else if ($mi[0] === '@' && $do_link) {
         if ($sp[$i+1][0] === '.' && 
             $spliti != '' &&
             ctype_email_local(substr($spliti, -1, 1))) {
@@ -1287,10 +1304,12 @@ function auto_link() {
                       $wmi, '">', $mi, '</a>', 
                       $afterlink);
         }
-      } else {
+      } else if ($do_link) {
         $t = strcat($t, '<a class="auto-link" href="',
                     $wmi, '">', $mi, '</a>', 
                     $afterlink);
+      } else {
+        $t = strcat($t, $mi, $afterlink);
       }
     } else {
       $t = strcat($t, $mi);
