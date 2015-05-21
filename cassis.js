@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2013 Tantek Çelik http://tantek.com 
+   cassis.js Copyright 2008-2015 Tantek Çelik http://tantek.com 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license:http://creativecommons.org/licenses/by-sa/3.0/         -->
 if you see this in the browser, you need to wrap your PHP include of cassis.js and use thereof with calls to ob_start and ob_end_clean, e.g.:
