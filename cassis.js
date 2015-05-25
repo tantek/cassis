@@ -1475,8 +1475,8 @@ function tw_url_to_status_id($u) {
 // returns tweet status id string; 0 if not a tweet permalink.
   if (!$u) return 0;
   $u = explode("/", string($u)); // https:,,twitter.com,t,status,nnn
-  if ($u[2]!="twitter.com" || 
-      $u[4]!="status"      ||
+  if ($u[2] != "twitter.com" || 
+      $u[4] != "status"      ||
       !ctype_digit($u[5])) {
     return 0;
   }
@@ -1496,7 +1496,19 @@ function tw_url_to_username($u) {
   return $u[3];
 }
 
-
+function fb_url_to_event_id($u) {
+// $u - fb event permalink url
+// returns fb event id string; 0 if not a fb event permalink.
+  if (!$u) return 0;
+  $u = explode("/", string($u)); // https:,,fb.com,events,nnn
+  if (($u[2] != "fb.com" && $u[2] != "facebook.com" && 
+       $u[2] != "www.facebook.com") || 
+      $u[3] != "events"      ||
+      !ctype_digit($u[4])) {
+    return 0;
+  }
+  return $u[4];
+}
 
 // ===================================================================
 // end CASSIS v0.1, cassis.js
