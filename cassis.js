@@ -217,7 +217,16 @@ function htmlspecialchars(s) {
 }
 
 function str_ireplace(a, b, s) {
-  return s.replace(new RegExp(a, "gi"), b);
+ var i;
+ if (!is_array(a)) {
+   return s.replace(new RegExp(a, "gi"), is_array(b) ? b[0] : b);
+ }
+ else {
+   for (i=0; i<a.length; i++) {
+     s = s.replace(new RegExp(a[i], "gi"), is_array(b) ? b[i] : b);
+   }
+   return s;
+ }
 }
 
 function trim() {
@@ -1161,6 +1170,21 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
   }
 
   return strcat(substr($s, 0, $slen), $e);
+}
+
+function auto_space($s) {
+// replace linebreaks with <br class="auto-break"/>
+//  and one leading space with &nbsp;
+// replace "  " with " &nbsp;"
+// replace leading spaces (on a line or before spaces) with nbsp;
+  if ($s[0] === ' ') {
+    $s = strcat('&#xA0;', substr($s, 1, strlen($s)-1));
+  }
+  return str_ireplace(array("\r\n", "\r", "\n ", "\n", "  "),
+                      array("\n", "\n", '<br class="auto-break"/>&#xA0;',
+                            '<br class="auto-break"/>',
+                            ' &#xA0;'),
+                      $s);
 }
 
 function auto_link_re() {
