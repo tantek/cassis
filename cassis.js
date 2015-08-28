@@ -457,6 +457,10 @@ function ctype_email_local($s) {
  return (preg_match("/^[a-zA-Z0-9_%+-]+$/", $s));
 }
 
+function ctype_uri_scheme($s) {
+ return (preg_match("/^[a-zA-Z][a-zA-Z0-9+.-]*$/", $s));
+}
+
 // -------------------------------------------------------------------
 // newbase60
 
@@ -823,10 +827,21 @@ function uri_clean($uri) {
 }
 
 function protocol_of_uri($uri) {
+  if (offset(':', $uri) === 0) { return ""; }
   $uri = explode(':', $uri, 2);
+  if (!ctype_uri_scheme($uri[0])) { return ""; }
   return strcat($uri[0], ':');
 }
 
+// returns e.g. //ttk.me/b/4DY1?seriously=yes#ud
+function relative_uri_hash($uri) {
+  if (offset(':', $uri) === 0) { return ""; }
+  $uri = explode(':', $uri, 2);
+  if (!ctype_uri_scheme($uri[0])) { return ""; }
+  return $uri[1];
+}
+
+// returns e.g. ttk.me
 function hostname_of_uri($uri) {
   $uri = explode('/', $uri, 4);
   if (count($uri) > 2) {
@@ -1293,10 +1308,11 @@ function auto_link() {
                      && ctype_digit(substr($pa, 1))) {
 				if ($do_link) {
 				  $t = strcat($t, '<a class="auto-link" href="',
-                      $wmi, '">', $mi, '</a> ');
+				              'https:', relative_uri_hash($wmi),
+                      '">', $mi, '</a> ');
 				}
 
-        $t = strcat($t, '<iframe class="vimeo-player auto-embed figure" width="480" height="385" style="border:0" src="', $prot, '//player.vimeo.com/video/', 
+        $t = strcat($t, '<iframe class="vimeo-player auto-embed figure" width="480" height="385" style="border:0" src="', 'https://player.vimeo.com/video/', 
                     substr($pa, 1), '"></iframe>', 
                     $afterlink);
       } else if ($hn === 'youtu.be' ||
@@ -1310,9 +1326,10 @@ function auto_link() {
         }
 				if ($do_link) {
   				$t = strcat($t, '<a class="auto-link" href="',
-                      $wmi, '">', $mi, '</a> ');
+  				            'https:', relative_uri_hash($wmi),
+                      '">', $mi, '</a> ');
         }
-        $t = strcat($t, '<iframe class="youtube-player auto-embed figure" width="480" height="385" style="border:0"  src="', $prot, '//www.youtube.com/embed/', 
+        $t = strcat($t, '<iframe class="youtube-player auto-embed figure" width="480" height="385" style="border:0"  src="', 'https://www.youtube.com/embed/', 
                     $yvid, '"></iframe>', 
                     $afterlink);
       } else if ($mi[0] === '@' && $do_link) {
