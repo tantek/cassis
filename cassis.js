@@ -1411,7 +1411,7 @@ function get_in_reply_to_urls($s) {
 
 // Twitter POSSE support
 
-// replace URLs with http://j.mp/0011235813 to mimic Twitter's t.co
+// replace URLs with https://j.mp/0011235813 to mimic Twitter's t.co
 function tw_text_proxy() {
   /// ?> <!--   ///
   var $args, $afterchar, $afterlink, $i, $isjs,
@@ -1462,12 +1462,10 @@ function tw_text_proxy() {
       
       $prot = protocol_of_uri($mi);
       $proxy_url = '';
-      if ($prot === 'https:') { 
-        $proxy_url = 'https://j.mp/0011235813';
-      } else if ($prot === 'irc:') {
+      if ($prot === 'irc:') {
         $proxy_url = $mi; // Twitter doesn't tco irc: URLs
-      } else { /* 'http:/' or presumed for schemeless URLs */ 
-        $proxy_url = 'http://j.mp/0011235813';
+      } else { /* 'https:', 'http:' or presumed for schemeless URLs */ 
+        $proxy_url = 'https://j.mp/0011235813';
       }
       $t = strcat($t, $proxy_url, $afterlink);
     }
