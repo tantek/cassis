@@ -1169,8 +1169,8 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
   }
 
   // trim extra whitespace before ellipsis down to one space
-  if ($slen > 2 && contains("\n ", $s[$slen-1])) {
-    while (contains("\n ", $s[$slen-2]) && $slen > 2) {
+  if ($slen > 2 && contains("\n\r ", $s[$slen-1])) {
+    while (contains("\n\r ", $s[$slen-2]) && $slen > 2) {
       --$slen;
     }
   }
