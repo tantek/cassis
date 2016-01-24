@@ -1,0 +1,22 @@
+[
+  {
+    "str":"This string definately does not have any urls in it",
+    "expect":"This string definately does not have any urls in it",
+    "msg":"noop on strings without links"
+  },
+  {
+    "str":"this string definitely has a link to tantek.com in it",
+    "expect":"this string definitely has a link to <a class=\"auto-link\" href=\"http://tantek.com\">tantek.com</a> in it",
+    "msg":"auto_link simple .com links"
+  },
+  {
+    "str":"This has a stanford.edu link",
+    "expect":"This has a <a class=\"auto-link\" href=\"http://stanford.edu\">stanford.edu</a> link",
+    "msg":"auto_link simple .edu links"
+  },
+  {
+    "str":"This has a bret.io link",
+    "expect":"This has a <a class=\"auto-link\" href=\"http://bret.io\">bret.io</a> link",
+    "msg":"auto_link simple .io links"
+  }
+]

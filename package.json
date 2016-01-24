@@ -4,7 +4,7 @@
   "description": "",
   "main": "cassis.js",
   "scripts": {
-    "test": "tape test/*.js | tap-spec"
+    "test": "tape js-tests/*.js | tap-spec"
   },
   "repository": {
     "type": "git",
