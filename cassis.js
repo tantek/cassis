@@ -477,14 +477,14 @@ function num_to_sxg($n) { /// ?> <!--   ///
     $p = "-";
   }
   while ($n>0) {
-    if(js()) {
-      $d = $n % 60;
-      $s = strcat($m[$d], $s);
-      $n = ($n-$d)/60;
-    } else {
+    if(!js() && function_exists('bcmod')) {
       $d = bcmod($n, 60);
       $s = $m[$d] . $s;
       $n = bcdiv(bcsub($n,$d),60);
+    } else {
+      $d = $n % 60;
+      $s = strcat($m[$d], $s);
+      $n = ($n-$d)/60;
     }
   }
   return strcat($p, $s);
@@ -517,10 +517,10 @@ function sxg_to_num($s) { /// ?> <!--   ///
     else if ($c>=97 && $c<=107) { $c-=62; }
     else if ($c>=109 && $c<=122) { $c-=63; }
     else { break; } // treat all other noise as end of number
-    if(js()) {
-      $n = 60*$n + $c;
-    } else {
+    if(!js() && function_exists('bcadd')) {
       $n = bcadd(bcmul(60, $n), $c);
+    } else {
+      $n = 60*$n + $c;
     }
   }
   return $n*$m;
