@@ -17,9 +17,7 @@ Clientside in HTML:
 Serverside in PHP:
 
 ```
-ob_start(); // stops the few HTML comments in CASSIS from being outputted
-include 'cassis.js';
-ob_end_clean();
+include 'cassis.php';
 ```
 
 In PHP using Composer:
@@ -31,9 +29,7 @@ In PHP using Composer:
 ```
 
 ```
-ob_start();
 require_once 'vendor/autoload.php';
-ob_end_clean();
 ```
 
 Tests
