@@ -480,7 +480,7 @@ function num_to_sxg($n) { /// ?> <!--   ///
     if(!js() && function_exists('bcmod')) {
       $d = bcmod($n, 60);
       $s = $m[$d] . $s;
-      $n = bcdiv(bcsub($n,$d),60);
+      $n = bcdiv(bcsub($n, $d), 60);
     } else {
       $d = $n % 60;
       $s = strcat($m[$d], $s);
