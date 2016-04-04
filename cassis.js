@@ -1199,6 +1199,24 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
   return strcat(substr($s, 0, $slen), $e);
 }
 
+function trim_leading_urls($s) {
+  // deliberately trim URLs with explicit http: / https: from start
+  // keep schemeless URLs, @-names as expected user-visible text
+  // if empty or just space after trimming, just return original
+  $r = trim($s);
+  while (substr($r, 0, 5) == 'http:' || substr($r, 0, 6) == 'https:')
+  {
+    $ws = offset(' ', $r);
+    $rs = offset("\r", $r);
+    if ($rs == 0) { $rs = offset("\n", $r); }
+    if ($rs != 0 && $rs < $ws) { $ws = $rs; }
+    if ($ws == 0) { return $s; }
+    $r = substr($r, $ws, strlen($r)-$ws);
+  }
+  $r = trim($r);
+  return ((strlen($r) > 0) ? $r : $s);
+}
+
 function auto_space($s) {
 // replace linebreaks with <br class="auto-break"/>
 //  and one leading space with &nbsp;
