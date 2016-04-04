@@ -338,13 +338,15 @@ function targetelement(e) {
 if (typeof exports !== 'undefined' &&
     typeof module !== 'undefined' && module.exports) {
   exports.auto_link = auto_link;
+  exports.num_to_sxg = num_to_sxg;
+  exports.sxg_to_num = sxg_to_num;
 }
 
 /// --> <?php ///
 
 
 // -------------------------------------------------------------------
-// character and string functions 
+// character and string functions
 
 // strcat: takes as many strings as you want to give it.
 function strcat() {         /// ?> <!--   ///
@@ -475,9 +477,15 @@ function num_to_sxg($n) { /// ?> <!--   ///
     $p = "-";
   }
   while ($n>0) {
-    $d = $n % 60;
-    $s = strcat($m[$d], $s);
-    $n = ($n-$d)/60;
+    if(!js() && function_exists('bcmod')) {
+      $d = bcmod($n, 60);
+      $s = $m[$d] . $s;
+      $n = bcdiv(bcsub($n, $d), 60);
+    } else {
+      $d = $n % 60;
+      $s = strcat($m[$d], $s);
+      $n = ($n-$d)/60;
+    }
   }
   return strcat($p, $s);
 }
@@ -498,7 +506,7 @@ function sxg_to_num($s) { /// ?> <!--   ///
     $s = substr($s, 1, $j);
   }
   for ($i=0; $i<$j; $i+=1) { // iterate from first to last char of $s
-    $c = ord($s[$i]); //  put current ASCII of char into $c  
+    $c = ord($s[$i]); //  put current ASCII of char into $c
     if ($c>=48 && $c<=57) { $c=$c-48; }
     else if ($c>=65 && $c<=72) { $c-=55; }
     else if ($c===73 || $c===108) { $c=1; } // typo cap I lower l to 1
@@ -509,7 +517,11 @@ function sxg_to_num($s) { /// ?> <!--   ///
     else if ($c>=97 && $c<=107) { $c-=62; }
     else if ($c>=109 && $c<=122) { $c-=63; }
     else { break; } // treat all other noise as end of number
-    $n = 60*$n + $c;
+    if(!js() && function_exists('bcadd')) {
+      $n = bcadd(bcmul(60, $n), $c);
+    } else {
+      $n = 60*$n + $c;
+    }
   }
   return $n*$m;
 }
