@@ -1,0 +1,8 @@
+machine:
+  php:
+    version: 5.5.11
+
+test:
+  override:
+    - phpunit.phar
+    - tape js-tests/*.js | tap-spec
