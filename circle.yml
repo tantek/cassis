@@ -5,6 +5,7 @@ machine:
 test:
   pre:
     - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+    - npm i -g eslint
   override:
     - phpcs --standard=PSR2 cassis.php
     - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit php-tests
