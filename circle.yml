@@ -4,5 +4,6 @@ machine:
 
 test:
   override:
-    - phpunit.phar
+    - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+    - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit php-tests
     - tape js-tests/*.js | tap-spec
