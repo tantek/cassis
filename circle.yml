@@ -7,4 +7,4 @@ test:
     - phpcs --standard=PSR2
     - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
     - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit php-tests
-    - node test
+    - npm test
