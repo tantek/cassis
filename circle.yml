@@ -4,7 +4,7 @@ machine:
 
 test:
   override:
-    - phpcs --standard=PSR2
+    - phpcs --standard=PSR2 cassis.php
     - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
     - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit php-tests
     - npm test
