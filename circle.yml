@@ -12,3 +12,4 @@ test:
     - phpcs --standard=PSR2 cassis.php
     - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit php-tests
     - eslint cassis.js
+    - npm test
