@@ -3,8 +3,10 @@ machine:
     version: 5.5.11
 
 test:
+  pre:
+    - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
   override:
     - phpcs --standard=PSR2 cassis.php
-    - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
     - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit php-tests
+    - eslint cassis.js
     - npm test
