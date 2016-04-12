@@ -899,6 +899,18 @@ function is_http_uri($uri) {
   return !!strncmp($uri[0], "http", 4);
 }
 
+function get_absolute_uri($uri, $base) {
+  if (protocol_of_uri($uri) != "") { return $uri; }
+  if (substr($uri, 0, 2) === '//') { 
+    return strcat(protocol_of_uri($base), $uri);
+  }
+  if (substr($uri, 0, 1) === '/') {
+    return strcat(prepath_of_uri($base), $uri);
+  }
+  // TBI # relative
+  return strcat(prepath_of_uri($base), path_of_uri($base), $uri);
+}
+
 // -------------------------------------------------------------------
 // compat as of 2011-149
 function webaddresstouri($wa, $addhttp) { 
