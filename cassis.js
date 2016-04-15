@@ -1046,15 +1046,15 @@ function xp_attr_starts_with($a, $s) {
 }
 
 function xp_has_rel($s) {
-  return strcat("//*[contains(concat(' ',@rel,' '),' ", $s, " ')]");
+  return strcat("//*[@href and contains(concat(' ',@rel,' '),' ", $s, " ')]");
 }
 
 function xpr_has_rel($s) {
-  return strcat(".//*[contains(concat(' ',@rel,' '),' ", $s, " ')]");
+  return strcat(".//*[@href and contains(concat(' ',@rel,' '),' ", $s, " ')]");
 }
 
 function xpr_attr_starts_with_has_rel($a, $s, $r) {
-  return strcat(".//*[contains(concat(' ',@rel,' '),' ", $r, 
+  return strcat(".//*[@href and contains(concat(' ',@rel,' '),' ", $r, 
                 " ') and starts-with(@", $a, ",'", $s, "')]");
 }
 
