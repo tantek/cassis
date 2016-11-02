@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2015 Tantek Çelik http://tantek.com 
+   cassis.js Copyright 2008-2016 Tantek Çelik http://tantek.com 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license:http://creativecommons.org/licenses/by-sa/3.0/         -->
 if you see this in the browser, you need to wrap your PHP include of cassis.js and use thereof with calls to ob_start and ob_end_clean, e.g.:
@@ -51,6 +51,9 @@ function date_get_timestamp($d) {
 //  return $n-0;
 //}
 
+function date_get_rfc3339($d) {
+  return $d->format('c');
+}
 
 // -------------------------------------------------------------------
 // old wrappers. transition code away from these
@@ -132,9 +135,8 @@ function ctype_space(s) {
 // date time functions
 
 function date_create(s) {
-  var d = new Date();
-  d.parse(s);
-  return d;
+  if (s) return new Date(s);
+  else return new Date();
 }
 
 function date_get_full_year(d) {
@@ -227,6 +229,14 @@ function str_ireplace(a, b, s) {
    }
    return s;
  }
+}
+
+function preg_match(p, s) {
+  return (s.match(trim_slashes(p)) ? 1 : 0);
+}
+
+function preg_split(p, s) {
+  return s.split(new RegExp(trim_slashes(p),"gi"));
 }
 
 function trim() {
