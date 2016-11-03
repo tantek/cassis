@@ -319,6 +319,13 @@ function js() {
 /// ?> <!--   ///
 // -------------------------------------------------------------------
 // javascript-only framework functions
+function targetelement(e) {
+  var t;
+  e = e ? e : window.event;
+  t = e.target ? e.target : e.srcElement;
+  t = (t.nodeType == 3) ? t.parentNode : t; // Safari workaround
+  return t;
+}
 
 function doevent(el, evt) {
   if (evt==="click" && el.tagName==='A') {
@@ -336,13 +343,6 @@ function doevent(el, evt) {
   }
 }
 
-function targetelement(e) {
-  var t;
-  e = e ? e : window.event;
-  t = e.target ? e.target : e.srcElement;
-  t = (t.nodeType == 3) ? t.parentNode : t; // Safari workaround
-  return t;
-}
 
 // CommonJS (node, browserify, npm) Exports
 if (typeof exports !== 'undefined' &&
@@ -848,6 +848,7 @@ function uri_clean($uri) {
                       str_ireplace("%2F", "/", rawurlencode($uri)));
 }
 
+// returns e.g. http:
 function protocol_of_uri($uri) {
   if (offset(':', $uri) === 0) { return ""; }
   $uri = explode(':', $uri, 2);
@@ -904,9 +905,15 @@ function path_of_uri($uri) {
   return '/';
 }
 
+function prepath_of_uri($uri) {
+  $uri = explode('/', $uri);
+  $uri = array_slice($uri, 0, 3);
+  return implode('/', $uri);
+}
+
 function is_http_uri($uri) {
-  $uri = explode(":", $uri, 2);
-  return !!strncmp($uri[0], "http", 4);
+  $uri = explode(':', $uri, 2);
+  return !!strncmp($uri[0], 'http', 4);
 }
 
 function get_absolute_uri($uri, $base) {
@@ -1083,7 +1090,7 @@ function vcp_dt_readable($d) { /// ?> <!--   ///
                    $r[0],'</time> on ');
      }
      else {
-       $r = strcat('<time class="value">',$d[1],'</time> on ');
+       $r = strcat('<time class="value">', $d[1], '</time> on ');
      }
   }
   return strcat($r, '<time class="value">', $d[0], '</time>');
@@ -1119,7 +1126,7 @@ function whistle_short_path($p) {
 }
 
 // -------------------------------------------------------------------
-// falcon
+// Falcon
 
 function html_unesc_amp_only($s) {
   return str_ireplace('&amp;', '&', $s);
@@ -1192,7 +1199,7 @@ function ellipsize_to_word($s, $max, $e, $min) { /// ?> <!--   ///
     $slen -= 1;
   }
   
-  //if char immediately before ellipsis would be @$ then trim it
+  // if char immediately before ellipsis would be @$ then trim it
   if ($slen > 0 && contains('@$', $s[$slen-1])) {
     $slen-=1;
   }
@@ -1323,9 +1330,9 @@ function auto_link() {
       
       $fe = 0;
       if ($do_embed) {
-        $fe = strtolower(
-               (substr($mi, -4, 1)==='.') ? substr($mi, -4, 4) 
-                                          : substr($mi, -5, 5));
+         $fe = strtolower(
+                (substr($mi, -4, 1) === '.') ? substr($mi, -4, 4) 
+                                             : substr($mi, -5, 5));
       }
       $wmi = web_address_to_uri($mi, true);
       $prot = protocol_of_uri($wmi);
@@ -1393,7 +1400,8 @@ function auto_link() {
         }
         else {
           // treat it as a Twitter @-username reference and link it
-          $t = strcat($t, '<a class="auto-link h-x-username" href="',
+          $t = strcat($t, 
+                      '<a class="auto-link h-cassis-username" href="',
                       $wmi, '">', $mi, '</a>', 
                       $afterlink);
         }
@@ -1421,7 +1429,7 @@ function get_auto_linked_urls($s) {
   if ($irtn < 2) { return array(); }
   $r = array();
   for ($i=1; $i<$irtn; $i++) {
-    $r[] = substr($s[$i], 0, offset('"', $s[$i])-1);
+    $r[$i-1] = substr($s[$i], 0, offset('"', $s[$i])-1);
   }
   return $r;
 }
@@ -1465,7 +1473,7 @@ function get_in_reply_to_urls($s) {
           if (substr($m, 0, 6) === 'irc://') { 
             // skip it. no known use of in-reply-to an IRC URL
           } else {
-            $r[count($r)] = webaddresstouri($m, true);
+            $r[count($r)] = web_address_to_uri($m, true);
           }
         }
         $j++;
@@ -1514,7 +1522,7 @@ function tw_text_proxy() {
     }
     $spe = substr($spliti, -2, 2);
     // don't proxy @-names, plain ccTLDs
-    if ($mi[0]!='@' &&
+    if ($mi[0] !== '@' &&
         (substr($mi, -3, 1) !== '.' || substr_count($mi, '.') > 1)) {
       $afterlink = '';
       $afterchar = substr($mi, -1, 1);
