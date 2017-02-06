@@ -2,7 +2,9 @@
    cassis.js Copyright 2008-2017 Tantek Çelik http://tantek.com 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license: https://creativecommons.org/licenses/by-sa/4.0/       -->
-if you see this in the browser, you need to wrap your PHP include of cassis.js and use thereof with calls to ob_start and ob_end_clean, e.g.:
+if you see this or "/// var" in the browser, you need to 
+wrap your PHP include of cassis.js and use of functions therein 
+with calls to ob_start and ob_end_clean, e.g.:
 ob_start(); 
 include 'cassis.js'; 
 // your code that calls CASSIS functions goes here
