@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2016 Tantek Çelik http://tantek.com 
+   cassis.js Copyright 2008-2017 Tantek Çelik http://tantek.com 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license: https://creativecommons.org/licenses/by-sa/4.0/       -->
 if you see this in the browser, you need to wrap your PHP include of cassis.js and use thereof with calls to ob_start and ob_end_clean, e.g.:
@@ -44,6 +44,10 @@ function date_get_full_year($d = "") {
 
 function date_get_timestamp($d) { 
   return $d->format('U'); // $d->getTimestamp(); // in PHP 5.3+
+}
+
+function date_get_ordinal_days($d) {
+ return 1 + $d->format('z');
 }
 
 // mixed-case function names are bad for PHP vs JS. Don't do it.
@@ -148,6 +152,21 @@ function date_get_full_year(d) {
 
 function date_get_timestamp(d) {
   return floor(d.getTime() / 1000);
+}
+
+function date_get_rfc3339($d) {
+  return strcat($d.getFullYear(),'-',
+                str_pad_left(1 + $d.getUTCMonth(), 2, "0"), '-',
+                str_pad_left($d.getDate(), 2, "0"), 'T',
+                str_pad_left($d.getUTCHours(), 2, "0"), ':',
+                str_pad_left($d.getUTCMinutes(), 2, "0"), ':',
+                str_pad_left($d.getUTCSeconds(), 2, "0"), 'Z');
+}
+
+// newcal
+
+function date_get_ordinal_days($d) {
+  return ymdp_to_d($d.getFullYear(), 1 + $d.getMonth(), $d.getDate());
 }
 
 
@@ -558,6 +577,7 @@ function sxgtonum($s) {
 function sxgtonumf($s, $f) {
   return sxg_to_numf($s, $f);
 }
+/* == end compat functions == */
 
 // -------------------------------------------------------------------
 // date and time
@@ -589,18 +609,7 @@ function date_create_timestamp($s) {
 
 // function date_get_timestamp($d) // in PHP/JS specific code above.
 
-function date_get_rfc3339($d) {
-  if (js()) {
-    return strcat($d.getFullYear(), '-',
-                  str_pad_left(1+$d.getUTCMonth(), 2, "0"), '-',
-                  str_pad_left($d.getDate(), 2, "0"), 'T',
-                  str_pad_left($d.getUTCHours(), 2, "0"), ':',
-                  str_pad_left($d.getUTCMinutes(), 2, "0"), ':',
-                  str_pad_left($d.getUTCSeconds(), 2, "0"), 'Z');
-  } else {
-    return date_format($d, 'c');
-  }
-}
+// function date_get_rfc3339($d) // in PHP/JS specific code above.
 
 function dt_to_time($dt) {
   $dt = explode("T", $dt);
@@ -658,13 +667,7 @@ function ymd_to_yd($d) {
   }
 }
 
-function date_get_ordinal_days($d) {
-  if (js()) {
-    return ymdp_to_d($d.getFullYear(), 1+$d.getMonth(), $d.getDate());
-  } else {
-    return 1+date_format($d, 'z');
-  }
-}
+// function date_get_ordinal_days($d) // in PHP/JS specific code above
 
 function bim_from_od($d) {
   return 1+floor(($d-1)/61);
@@ -937,6 +940,15 @@ function uriclean($uri) { return uri_clean($uri); }
 
 
 // -------------------------------------------------------------------
+// HTTP related
+
+function is_html_type($ct) {
+  $ct = explode(';', $ct, 2);
+  $ct = $ct[0];
+  return ($ct === 'text/html' || $ct === 'application/xhtml+xml');
+}
+
+// -------------------------------------------------------------------
 // hexatridecimal
 
 function num_to_hxt($n) { /// ?> <!--   ///
@@ -1075,6 +1087,10 @@ function xpr_attr_starts_with_has_rel($a, $s, $r) {
                 " ') and starts-with(@", $a, ",'", $s, "')]");
 }
 
+function xpr_attr_starts_with_has_class($a, $s, $c) {
+  return strcat(".//*[contains(concat(' ',@class,' '),' ", $c, " ') and starts-with(@", $a, ",'", $s, "')]");
+}
+
 // value class pattern readable date time from ISO8601 datetime
 function vcp_dt_readable($d) { /// ?> <!--   ///
   var $r;                      /// --> <?php ///
@@ -1109,6 +1125,9 @@ function xphasrel($s) { return xp_has_rel($s); }
 function xprhasrel($s) { return xpr_has_rel($s); }
 function xprattrstartswithhasrel($a, $s, $r) {
   return xpr_attr_starts_with_has_rel($a, $s, $r);
+}
+function xprattrstartswithhasclass($a, $s, $c) {
+  return xpr_attr_starts_with_has_class($a, $s, $c);
 }
 function vcpdtreadable($d) { return vcp_dt_readable($d); }
 
@@ -1262,7 +1281,7 @@ function auto_space($s) {
 }
 
 function auto_link_re() {
-  return '/(?:\\@[_a-zA-Z0-9]{1,17})|(?:(?:(?:(?:http|https|irc)?:\\/\\/(?:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+(?:\\:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+)?\\@)?)?(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]*\\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|j[emop]|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|museum|m[acdeghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|(?:rocks|r[eouw])|(?:space|s[abcdeghijklmnortuvyz])|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|(?:wtf|w[fs])|xyz|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\\:\\d{1,5})?)(?:\\/(?:(?:[!#&-;=?-Z_a-z~])|(?:\\%[a-fA-F0-9]{2}))*)?)(?=\\b|\\s|$)/';
+  return '/(?:\\@[_a-zA-Z0-9]{1,17})|(?:(?:(?:(?:http|https|irc)?:\\/\\/(?:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+(?:\\:(?:[!$&-.0-9;=?A-Z_a-z]|(?:\\%[a-fA-F0-9]{2}))+)?\\@)?)?(?:(?:(?:[a-zA-Z0-9][-a-zA-Z0-9]*\\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|blog|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|j[emop]|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|museum|m[acdeghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|(?:rocks|r[eouw])|(?:space|s[abcdeghijklmnortuvyz])|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|(?:wtf|w[fs])|xyz|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\\:\\d{1,5})?)(?:\\/(?:(?:[!#&-;=?-Z_a-z~])|(?:\\%[a-fA-F0-9]{2}))*)?)(?=\\b|\\s|$)/';
   // ccTLD compressed regular expression clauses (re)created.
   // .mobi .jobs deliberately excluded to discourage layer violations.
   // see http://flic.kr/p/2kmuSL for more on the problematic new gTLDs
