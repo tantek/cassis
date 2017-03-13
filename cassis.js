@@ -1391,10 +1391,11 @@ function auto_link() {
 				              'https:', relative_uri_hash($wmi),
                       '">', $mi, '</a> ');
 				}
-
-        $t = strcat($t, '<iframe class="vimeo-player auto-embed figure" width="480" height="385" style="border:0" src="', 'https://player.vimeo.com/video/', 
-                    substr($pa, 1), '"></iframe>', 
-                    $afterlink);
+        if ($do_embed) {
+          $t = strcat($t, '<iframe class="vimeo-player auto-embed figure" width="480" height="385" style="border:0" src="', 'https://player.vimeo.com/video/', 
+                      substr($pa, 1), '"></iframe>', 
+                      $afterlink);
+        }
       } else if ($hn === 'youtu.be' ||
                 (($hn === 'youtube.com' || $hn === 'www.youtube.com')
                  && ($yvid = offset('watch?v=', $mi)) !== 0)) {
@@ -1409,9 +1410,11 @@ function auto_link() {
   				            'https:', relative_uri_hash($wmi),
                       '">', $mi, '</a> ');
         }
-        $t = strcat($t, '<iframe class="youtube-player auto-embed figure" width="480" height="385" style="border:0"  src="', 'https://www.youtube.com/embed/', 
-                    $yvid, '"></iframe>', 
-                    $afterlink);
+        if ($do_embed) {
+          $t = strcat($t, '<iframe class="youtube-player auto-embed figure" width="480" height="385" style="border:0"  src="', 'https://www.youtube.com/embed/', 
+                      $yvid, '"></iframe>', 
+                      $afterlink);
+        }
       } else if ($mi[0] === '@' && $do_link) {
         if ($sp[$i+1][0] === '.' && 
             $spliti != '' &&
