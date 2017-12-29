@@ -51,11 +51,5 @@ $ phpunit.phar
 To run the JS tests:
 
 ```
-$ tape js-tests/*.js | tap-spec
-```
-
-or if you don't have tape and tap-spec installed globally, then
-
-```
-$ ./node_modules/tape/bin/tape js-tests/*.js | ./node_modules/tap-spec/bin/cmd.js
+$ npm test
 ```
