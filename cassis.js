@@ -1549,8 +1549,9 @@ function tw_text_proxy() {
     }
     $spe = substr($spliti, -2, 2);
     // don't proxy @-names, plain ccTLDs
-    if ($mi[0] !== '@' &&
-        (substr($mi, -3, 1) !== '.' || substr_count($mi, '.') > 1)) {
+    if ($mi[0] !== '@' 
+      //&& (substr($mi, -3, 1) !== '.' || substr_count($mi, '.') > 1)
+        ) {
       $afterlink = '';
       $afterchar = substr($mi, -1, 1);
       while (contains('.!?,;"\')]}', $afterchar) && // trim punc @ end
