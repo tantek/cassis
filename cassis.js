@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2017 Tantek Çelik http://tantek.com 
+   cassis.js Copyright 2008-2018 Tantek Çelik http://tantek.com/ 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license: https://creativecommons.org/licenses/by-sa/4.0/       -->
 if you see this or "/// var" in the browser, you need to 
@@ -916,6 +916,23 @@ function prepath_of_uri($uri) {
   return implode('/', $uri);
 }
 
+function segment_of_uri($n, $u) {
+   /* nth starting at 1 */
+   $u = path_of_uri($u);
+   $u = explode('/', $u);
+   if ($n>=0 && $n<count($u))
+     return $u[$n];
+   else return "";
+}
+
+function fragment_of_uri($u) {
+  if (offset('#', $u) !== 0) {
+    $u = explode('#', $u, 2);
+    return $u[1];
+  }
+  return "";
+}
+
 function is_http_uri($uri) {
   $uri = explode(':', $uri, 2);
   return !!strncmp($uri[0], 'http', 4);
@@ -1548,7 +1565,7 @@ function tw_text_proxy() {
       $mi = strcat($mi, '/'); // explicitly include in match
     }
     $spe = substr($spliti, -2, 2);
-    // don't proxy @-names, plain ccTLDs
+    // don't proxy @-names //, plain ccTLDs
     if ($mi[0] !== '@' 
       //&& (substr($mi, -3, 1) !== '.' || substr_count($mi, '.') > 1)
         ) {
