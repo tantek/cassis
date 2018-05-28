@@ -96,7 +96,8 @@ function auto_url_summary($u) {
   }
   // TBI: if $u has fragmention, synthesize quote from it
   // per http://www.kevinmarks.com/mentionquote.html
-  return strcat(hostname_of_uri($u),'’s post');
+  return strcat(hostname_of_uri($u), 
+                (path_of_uri($u)!='/') ? '’s post' : '');
 }
 
 ?>
