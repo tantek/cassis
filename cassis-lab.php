@@ -53,7 +53,9 @@ function is_one_emoji($s) {
 function auto_url_summary($u) {
   // in: $u is a post permalink url
   // out: text summary based on url
-  $s = sld_of_uri($u);
+  $hn = hostname_of_uri($u);
+  $ss = explode('.', $hn);
+  $s = $ss[count($ss) - 2];
   if ($s == 'github') {
     // comment, issue, pull request
     if (fragment_of_uri($u) != "") {
@@ -94,6 +96,23 @@ function auto_url_summary($u) {
     if (segment_of_uri(2, $u) == 'posts')
       return strcat(segment_of_uri(1, $u),'’s post');
   }
+  if ($s == 'eventbrite')
+    return "an Eventbrite event";
+  if ($s == 'upcoming' && segment_of_uri(1, $u) == 'event')
+    return "an Upcoming event";
+  if ($s == 'calagator' && segment_of_uri(1, $u) == 'events')
+    return "a Calagator event";
+
+  if ($s == 'indieweb') {
+    if (segment_of_uri(1, $u) == 'events' && segment_of_uri(2, $u) != '')
+      return "an IndieWeb event";
+    if (count($ss) == 3 && ctype_digit($ss[0]))
+      return "an IndieWeb event";      
+    
+    return "an IndieWeb page"; 
+    // TBI different IndieWeb pages
+  }
+  
   // TBI: if $u has fragmention, synthesize quote from it
   // per http://www.kevinmarks.com/mentionquote.html
   return strcat(hostname_of_uri($u), 
