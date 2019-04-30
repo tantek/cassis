@@ -44,7 +44,10 @@ function date_get_full_year($d = "") {
   return $d->format('Y');
 } 
 
-function date_get_timestamp($d) { 
+function date_get_timestamp($d = "") {
+  if ($d == "") {
+    $d = new DateTime();
+  }
   return $d->format('U'); // $d->getTimestamp(); // in PHP 5.3+
 }
 
