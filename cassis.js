@@ -136,6 +136,10 @@ function ctype_digit(s) {
   return (/^[0-9]+$/).test(s);
 }
 
+function ctype_lower(s) {
+ return (/^[a-z]+$/).test(s);
+}
+
 function ctype_space(s) {
  return /\s/.test(s);
 }
