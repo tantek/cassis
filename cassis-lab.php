@@ -58,7 +58,7 @@ function auto_url_summary($u) {
   $s = $ss[count($ss) - 2];
   if ($s == 'github') {
     // comment, issue, pull request
-    if (fragment_of_uri($u) != "") {
+    if (fragment_of_uri($u) != '') {
       if (segment_of_uri(3, $u) == 'issues')
         return strcat('a comment on issue ',
                       segment_of_uri(4, $u), ' of GitHub project “',
@@ -71,19 +71,19 @@ function auto_url_summary($u) {
 		            segment_of_uri(2, $u), '”');                 
     }
     
-    if (segment_of_uri(3, $u) == 'issues') {
-      if (segment_of_uri(4, $u) != "")
-        return strcat('issue ', segment_of_uri(4, $u), 
-                      ' of GitHub project “',
-                      segment_of_uri(2, $u), '”');
-      else
-        return strcat('GitHub project “',
-                      segment_of_uri(2, $u), '”');
-    }            
     if (segment_of_uri(3, $u) == 'pull') 
       return strcat('pull request ', segment_of_uri(4, $u), 
                     ' to GitHub project “',
                     segment_of_uri(2, $u), '”');
+
+    if (segment_of_uri(3, $u) == 'issues' && segment_of_uri(4, $u) != '')
+        return strcat('issue ', segment_of_uri(4, $u), 
+                      ' of GitHub project “',
+                      segment_of_uri(2, $u), '”');
+
+    if (segment_of_uri(2, $u) != '')
+        return strcat('GitHub project “',
+                      segment_of_uri(2, $u), '”');      
   }
   if ($s == 'twitter') {
     return strcat('@', segment_of_uri(1, $u),'’s tweet');
