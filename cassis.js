@@ -1362,7 +1362,7 @@ function auto_link() {
     if ((!$spe || !preg_match('/(?:\\=[\\"\\\']?|t;)/', $spe)) &&
         substr(trim($sp[$i+1]), 0, 3)!=='</a' && 
         (!contains(
-'@charset@font@font-face@import@media@namespace@page@ABCDEFGHIJKLMNOPQ@',
+'@charset@font@font-face@import@media@namespace@page@supports@ABCDEFGHIJKLMNOPQ@',
             strcat($mi, '@')))) {
       $afterlink = '';
       $afterchar = substr($mi, -1, 1);
