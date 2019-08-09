@@ -214,6 +214,16 @@ function strpos(h, n, o) {
   else { return o; }
 }
 
+function stripos(h, n, o) {
+  // clients must triple-equal test return for === false for no match!
+  if (arguments.length === 2) {
+    o = 0;
+  }
+  o = h.toLowerCase().indexOf(n.toLowerCase(), o);
+  if (o === -1) { return false; }
+  else { return o; }
+}
+
 function strncmp(s1, s2, n) {
   s1 = substr(String(s1), 0, n);
   s2 = substr(String(s2), 0, n);
