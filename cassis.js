@@ -1384,7 +1384,7 @@ function auto_link() {
       }
       
       $fe = 0;
-      if ($do_embed) {
+      if ($do_embed && strlen($mi) > 5) {
          $fe = strtolower(
                 (substr($mi, -4, 1) === '.') ? substr($mi, -4, 4) 
                                              : substr($mi, -5, 5));
