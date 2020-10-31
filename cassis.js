@@ -1651,7 +1651,7 @@ function tw_url_to_status_id($u) {
 // returns tweet status id string; 0 if not a tweet permalink.
   if (!$u) return 0;
   $u = explode("/", string($u)); // https:,,twitter.com,t,status,nnn
-  if ($u[2] != "twitter.com" || 
+  if (($u[2] != "twitter.com" && $u[2] != "mobile.twitter.com") || 
       $u[4] != "status"      ||
       !ctype_digit($u[5])) {
     return 0;
