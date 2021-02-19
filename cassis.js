@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2019 Tantek Çelik http://tantek.com/ 
+   cassis.js Copyright 2008-2021 Tantek Çelik http://tantek.com/ 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license: https://creativecommons.org/licenses/by-sa/4.0/       -->
 if you see this or "/// var" in the browser, you need to 
@@ -32,6 +32,28 @@ function php_min_version($s) {
     }
   }
   return true;
+}
+
+// -------------------------------------------------------------------
+// string functions requiring separate js/php definitions
+
+function preg_matches($p, $s) {
+  $m = array();
+  if (preg_match_all($p, $s, $m, PREG_PATTERN_ORDER) !== FALSE) {
+    return $m[0];
+  }
+  else {
+    return array();
+  }
+}
+
+function preg_match_1($p, $s) {
+  $m = array();
+  if (preg_match($p, $s, $m) !== FALSE) {
+    return $m[0];
+  } else {
+    return null; //array();
+  }
 }
 
 // -------------------------------------------------------------------
@@ -331,6 +353,17 @@ function ucfirst(s) {
 
 
 // -------------------------------------------------------------------
+// string functions requiring separate js/php definitions
+
+function preg_matches(p, s) {
+  return s.match(new RegExp(trim_slashes(p), "gi")); // match is a keyword in PHP 8.0
+}
+
+function preg_match_1(p, s) {
+  return s.match(new RegExp(trim_slashes(p), "i")); // match is a keyword in PHP 8.0
+}
+
+// -------------------------------------------------------------------
 // pacify jslint/jshint
 // -- define functions and variables only used in PHP flow.
 function func_get_args() { }
@@ -339,7 +372,6 @@ var PREG_PATTERN_ORDER;
 var STR_PAD_LEFT;
 // -- may eventually define these for JS.
 function date_format() { }
-function preg_match_all() { }
 function str_pad() { }
 function DateTime() { }
 
@@ -452,31 +484,6 @@ function trim_slashes($s) {
   return $s;
 }
 
-// define a few JS functions that PHP already has, using CASSIS funcs
-/// ?> <!--   ///
-function preg_match(p, s) {
-  return (s.match(trim_slashes(p)) ? 1 : 0);
-}
-
-function preg_split(p, s) {
-  return s.split(new RegExp(trim_slashes(p), "gi"));
-}
-/// --> <?php ///
-
-function preg_match_1($p, $s) { /// ?> <!--   ///
-  var $m;                       /// --> <?php ///
-  if (js()) {
-    return $s.match(new RegExp(trim_slashes($p), "i"));
-  } else {
-    $m = array();
-    if (preg_match($p, $s, $m) !== FALSE) {
-      return $m[0];
-    } else {
-      return null; //array();
-    }
-  }
-}
-
 function preg_replace_1($p, $r, $s) {
   if (js()) {
     return $s.replace(new RegExp(trim_slashes($p), "i"), $r);
@@ -485,20 +492,6 @@ function preg_replace_1($p, $r, $s) {
     $r = preg_replace($p, $r, $s, 1);
     if ($r !== null) { return $r; }
     else             { return $s; }
-  }
-}
-
-function preg_matches($p, $s) { /// ?> <!--   ///
-  var $m;                       /// --> <?php ///
-  if (js()) {
-    return $s.match(new RegExp(trim_slashes($p), "gi"));
-  } else {
-    $m = array();
-    if (preg_match_all($p, $s, $m, PREG_PATTERN_ORDER) !== FALSE) {
-      return $m[0];
-    } else {
-      return null; //array();
-    }
   }
 }
 
