@@ -7,13 +7,13 @@ Conceived [in late 2008](http://twitter.com/t/statuses/916632211), the goal of t
 
 Until typical hosting companies support running JS on the server, CASSIS code must run in at least two programming language environments, JS on the client, and something that can be made to resemble JS on typical hosting company servers, which turns out to be PHP.
 
-For more see:
+For more background see:
 http://cassisjs.org
 
 Including CASSIS
 ----------------
 
-Use the following code to include cassis.js:
+Use the following code to include cassis.js locally from your server:
 
 Clientside in HTML:
 
@@ -58,6 +58,6 @@ Experimental live
 -----------------
 
 Experimental CASSIS improvements and additions are tested live here:
-* http://tantek.com/cassis.js
+* https://tantek.com/cassis.js
 
 If you're curious or want to try a version potentially newer than the cassis.js published here.
