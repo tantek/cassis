@@ -63,12 +63,19 @@ function auto_url_summary($u) {
         return strcat('a comment on issue ',
                       segment_of_uri(4, $u), ' of GitHub project “',
                       segment_of_uri(2, $u), '”');
-      if (segment_of_uri(3, $u) == 'pull')
-        return strcat('a comment on pull request ',
-                      segment_of_uri(4, $u), ' to GitHub project “',
-                      segment_of_uri(2, $u), '”');
+      if (segment_of_uri(3, $u) == 'pull') {
+        if (substr(fragment_of_uri($u), 0, 17) == 'pullrequestreview') {
+          return strcat('a review on pull request ',
+                        segment_of_uri(4, $u), ' to GitHub project “',
+                        segment_of_uri(2, $u), '”');        
+        } else {
+          return strcat('a comment on pull request ',
+                        segment_of_uri(4, $u), ' to GitHub project “',
+                        segment_of_uri(2, $u), '”');
+        }             
+      }
       return strcat('a comment on GitHub project “',
-		            segment_of_uri(2, $u), '”');                 
+                    segment_of_uri(2, $u), '”');                 
     }
     
     if (segment_of_uri(3, $u) == 'pull') 
@@ -104,7 +111,8 @@ function auto_url_summary($u) {
     return "a Calagator event";
 
   if ($s == 'indieweb') {
-    if (segment_of_uri(1, $u) == 'events' && segment_of_uri(2, $u) != '')
+    if ((segment_of_uri(1, $u) == 'events' || $ss[0] == 'events')
+        && segment_of_uri(2, $u) != '')
       return "an IndieWeb event";
     if (count($ss) == 3 && ctype_digit($ss[0]))
       return "an IndieWeb event";      
