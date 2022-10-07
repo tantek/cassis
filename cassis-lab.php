@@ -52,7 +52,7 @@ function is_one_emoji($s) {
 /* auto_url_summary */
 function auto_url_summary($u) {
   // in: $u is a post permalink url
-  // out: text summary based on url
+  // out: text summary based on url, can be appended to e.g. "↳ In reply to " for a minimal readable reply-context
   $hn = hostname_of_uri($u);
   $ss = explode('.', $hn);
   $s = $ss[count($ss) - 2];
