@@ -1,6 +1,6 @@
 <?php
 /* 
-   cassis-lab.php Copyright 2018 Tantek Çelik http://tantek.com/ 
+   cassis-lab.php Copyright 2018-2023 Tantek Çelik https://tantek.com/ 
    Part of cassisproject.com
    license: https://creativecommons.org/licenses/by-sa/4.0/
 
