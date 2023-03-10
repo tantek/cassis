@@ -1,5 +1,5 @@
 /* <!--
-   cassis.js Copyright 2008-2022 Tantek Çelik http://tantek.com/ 
+   cassis.js Copyright 2008-2023 Tantek Çelik https://tantek.com/ 
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license: https://creativecommons.org/licenses/by-sa/4.0/       -->
 if you see this or "/// var" in the browser, you need to 
