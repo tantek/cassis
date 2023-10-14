@@ -3,12 +3,12 @@
    http://cassisproject.com conceived:2008-254; created:2009-299;
    license: https://creativecommons.org/licenses/by-sa/4.0/       -->
 if you see this or "/// var" in the browser, you need to 
-wrap your PHP include of cassis.js and use of functions therein 
+wrap your PHP include of cassis.js AND your use of functions therein 
 with calls to ob_start and ob_end_clean, e.g.:
-ob_start(); 
-include 'cassis.js'; 
-// your code that calls CASSIS functions goes here
-ob_end_clean(); 
+ob_start();
+include 'cassis.js';
+// your code that calls CASSIS functions like auto_link('@tantek.com') goes here
+ob_end_clean();
 /* <!-- <?php // CASSIS v0.1 start -->
 // ===================================================================
 // PHP-only block. Processed only by PHP. Use only // comments here.
@@ -1443,7 +1443,7 @@ function auto_link() {
                       $afterlink);
         }
       } else if ($mi[0] === '@' && $do_link && !contains($mi, '.')) {
-        if ($sp[$i+1][0] === '.' && 
+        if (substr($sp[$i+1], 0, 1) === '.' && 
             $spliti != '' &&
             ctype_email_local(substr($spliti, -1, 1))) {
           // if email address, simply append info, no linking
