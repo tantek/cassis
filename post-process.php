@@ -6,13 +6,15 @@
  * Cassis in PHP.
  */
 
-// Load the source code, stripping any comments and whitespace from the PHP source
-$source = php_strip_whitespace('cassis.js');
+// Load the source code
+$source = file_get_contents('cassis.js');
 
 // Remove the top comment that talks about using ob_start
 $source = preg_replace('/\/\* <!--.+\n\/\* <!-- /Usm', '', $source);
 
 // Remove HTML comments
+// Without this step, you would need to wrap every function call in ob_start/ob_get_clean.
+// This effectively removes all the (JS) comments, so only actual PHP source code is left.
 $source = preg_replace('/<!--(.|\s)*?-->/', '', $source);
 
 // Remove close/open PHP tags
@@ -20,8 +22,5 @@ $source = preg_replace('/\?>\s+<\?php/', '', $source);
 
 // Remove trailing HTML comment tag (and PHP tag since we can do that safely)
 $source = preg_replace('/\?> -->$/', '', $source);
-
-// Put each function on its own line
-$source = preg_replace('/function /', "\n$0", $source);
 
 file_put_contents('cassis.php', $source);
