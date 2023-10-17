@@ -1679,6 +1679,20 @@ function fb_url_to_event_id($u) {
   return $u[4];
 }
 
+function is_slash_at_post($u) {
+// $u - Mastodon or other ActivityPub supporting site post permalink URL
+// returns whether or not the URL has one of the following syntaxes:
+// domain/@user@domain/number
+// domain/@user/number
+// false positives should be harmless so this function can be shorter/quicker
+  if (!$u) return false;
+  $u = explode('/', string($u)); // https:,,domain,@user(@domain),nnn
+  if (count($u) != 5) return false;
+  if (substr($u[3], 0, 1) != '@') return false;
+  if (!ctype_digit($u[4])) return false;
+  return true;
+}
+
 // ===================================================================
 // end CASSIS v0.1, cassis.js
 // ?> -->
