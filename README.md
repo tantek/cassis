@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/bear/cassis.svg?style=shield)](https://circleci.com/gh/tantek/cassis)
+
 cassis.js
 =========
 
