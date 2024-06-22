@@ -1369,7 +1369,7 @@ function auto_link() {
             strcat($mi, '@')))) {
       $afterlink = '';
       $afterchar = substr($mi, -1, 1);
-      while (contains('.!?,;"\')]}', $afterchar) && // trim punc from
+      while (contains('.!?,:;"\')]}', $afterchar) && // trim punc from
           ($afterchar!==')' || !contains($mi,'('))) { // 1 () pair
         $afterlink = strcat($afterchar, $afterlink);
         $mi = substr($mi, 0, -1);
@@ -1516,7 +1516,7 @@ function get_in_reply_to_urls($s) {
         $m = $ms[$j];
         if ($m[0] != '@') { // skip @-references
           $ac = substr($m, -1, 1);
-          while (contains('.!?,;"\')]}', $ac) && // trim punc @ end
+          while (contains('.!?,:;"\')]}', $ac) && // trim punc @ end
               ($ac != ')' || !contains($m, '('))) { 
               // allow one paren pair
               // *** not sure twitter is this smart
@@ -1581,7 +1581,7 @@ function tw_text_proxy() {
         ) {
       $afterlink = '';
       $afterchar = substr($mi, -1, 1);
-      while (contains('.!?,;"\')]}', $afterchar) && // trim punc @ end
+      while (contains('.!?,:;"\')]}', $afterchar) && // trim punc @ end
           ($afterchar !== ')' || !contains($mi, '('))) { 
           // allow one paren pair
           // *** not sure twitter is this smart
