@@ -1045,6 +1045,53 @@ function numtoisbn10($n) { return num_to_isbn10($n); }
 
 
 // -------------------------------------------------------------------
+
+/* ASIN */
+
+function asin_to_rsxg($a) { // ASIN to reversible sexagesimal; prefix ISBN-10 w ~
+ $a = amazontoasin($a); // extract ASIN from Amazon URL if necessary
+ if ($a[0]=='B') {
+   $a=numtosxg(hxttonum(substr($a,1,9)));
+ }
+ else {
+   $a = implode("",explode("-",$a)); // eliminate presentational hyphens
+   if (strlen($a)>10 && substr($a,0,3)=="978") {
+     $a = substr($a,3,9);
+   }
+   else {
+     $a = substr($a,0,9);
+   }
+   $a = strcat("~",numtosxg($a));
+ }
+ return $a;
+}
+
+function amazon_to_asin($a) {
+ // idempotent
+ if (preg_match("/[\.\/]+/",$a)) {
+   $a = explode("/",$a);
+   for ($i=count($a)-1; $i>=0; $i--) {
+     if (preg_match("/^[0-9A-Za-z]{10}$/",$a[$i])) {
+       $a = $a[$i];
+       break;
+     }
+   }
+   if ($i==-1) { // no ASIN was found in URL
+     $a=""; // reset $a to a string (instead of an array)
+   }
+ }
+ return $a;
+}
+
+// -------------------------------------------------------------------
+// compat as of 2025-124
+function asintorsxg($a) { return asin_to_rsxg($a); }
+function amazontoasin($a) { return amazon_to_asin($a); }
+
+/* end ASIN */
+
+
+// -------------------------------------------------------------------
 // HyperTalk
 
 function trunc($n) { // just an alias from BASIC days
