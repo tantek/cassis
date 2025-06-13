@@ -8,7 +8,7 @@ Conceived [in late 2008](https://twitter.com/t/statuses/916632211), the goal of 
 Until typical hosting companies support running JS on the server, CASSIS code must run in at least two programming language environments, JS on the client, and something that can be made to resemble JS on typical hosting company servers, which turns out to be PHP.
 
 For more background see:
-https://cassisjs.org
+http://cassisjs.org
 
 Including CASSIS
 ----------------
