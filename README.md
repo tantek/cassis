@@ -1,9 +1,9 @@
 cassis.js
 =========
 
-<img src="http://tantek.pbworks.com/f/1297010926/cassis128.png" alt="" align="left" /> CASSIS stands for: client and server scripting implementation subset.
+<img src="https://tantek.pbworks.com/f/1297010926/cassis128.png" alt="" align="left" /> CASSIS stands for: client and server scripting implementation subset.
 
-Conceived [in late 2008](http://twitter.com/t/statuses/916632211), the goal of the CASSIS Project is universal javascript (JS) that works on the client and the server for scalable application logic. The primary use-case is writing code to implement application logic that runs in browsers, especially dynamic interfaces that make use of XMLHTTPRequest (XHR/AJAX/AHAH), and also runs on web servers.
+Conceived [in late 2008](https://twitter.com/t/statuses/916632211), the goal of the CASSIS Project is universal javascript (JS) that works on the client and the server for scalable application logic. The primary use-case is writing code to implement application logic that runs in browsers, especially dynamic interfaces that make use of XMLHTTPRequest (XHR/AJAX/AHAH), and also runs on web servers.
 
 Until typical hosting companies support running JS on the server, CASSIS code must run in at least two programming language environments, JS on the client, and something that can be made to resemble JS on typical hosting company servers, which turns out to be PHP.
 
